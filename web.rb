@@ -1,5 +1,12 @@
 require 'sinatra'
+require 'haml'
+require 'sass'
 
 get '/' do
-   "Hello, world"
+	haml :index
 end
+
+get '/style.css' do
+	sass :style
+end
+
