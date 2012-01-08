@@ -10,3 +10,6 @@ get '/style.css' do
 	sass :style
 end
 
+get '/js/index.js' do
+	File.read('js/index.js')
+end
