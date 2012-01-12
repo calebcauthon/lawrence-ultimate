@@ -1,0 +1,20 @@
+select the users you'd like to email:
+%br
+%br
+%form(method='POST' action='notify')
+	-@emails.each do |row|
+		%input(type='checkbox' name='emails_selected[]')
+		%input(name='email_addresses[]' value='#{row['email_address']}')
+		= row['email_address']
+		%br
+	%br
+	%br
+
+	now type the message body:
+	%br
+	%textarea(rows=10 cols=100 name='message_body')
+
+	%br
+	%br
+
+	%button send!

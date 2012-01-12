@@ -11,14 +11,19 @@
 		.pageWrap
 			.bodyWrap
 				.headline 
-					.logo Lawrence Ultimate
+					.logo 
+						%img(src='/images/LUFL_logo.png' width='100' height='100')
+						.copy Lawrence Ultimate
 					.bullets
 						%ul	
-							%li summer league
+							%li
+								%a(href="summer-league") summer league
 							%li fall league
 							%li pickup games
 				.contentWrap
 					.leftColumnWrap 
 						=haml :summerLeagueSignup
+						%br
+						=haml :summerLeagueSchedule
 					.rightColumnWrap
 	=haml :summerLeagueSignupJS	

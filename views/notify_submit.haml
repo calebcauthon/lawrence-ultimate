@@ -1,0 +1,7 @@
+the message body is
+%div #{params['message_body']}
+
+the following emails were selected:
+-params['emails_selected'].each_index do |i|
+	-if params['emails_selected'][i].eql? "on"	
+		%div #{params['email_addresses'][i]}
