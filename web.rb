@@ -3,7 +3,7 @@ require 'haml'
 require 'sass'
 require 'mongo'
 require 'curb' 
-require 'mailgun.rb'
+require './mailgun.rb'
 
 get '/' do
 	haml :index	
