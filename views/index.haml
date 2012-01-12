@@ -2,7 +2,7 @@
 	%head
 		:css
 			@import url(/style.css);
-		%link(href="http://fonts.googleapis.com/css?family=Chelsea+Market|Days+One|Special+Elite|Comfortaa"
+		%link(href="http://fonts.googleapis.com/css?family=Chelsea+Market|Days+One|Pompiere"
 			rel="stylesheet"
 			type="text/css")
 		%script(type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js")
@@ -23,7 +23,7 @@
 				.contentWrap
 					.leftColumnWrap 
 						=haml :summerLeagueSignup
-						%br
-						=haml :summerLeagueSchedule
+						%br					
 					.rightColumnWrap
+						=haml :summerLeagueSchedule
 	=haml :summerLeagueSignupJS	
