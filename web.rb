@@ -6,7 +6,11 @@ require 'curb'
 require './mailgun.rb'
 
 get '/' do
-	haml :index	
+	haml :index, :layout => :layout
+end
+
+get '/about' do
+	haml :about, :layout => :layout
 end
 
 def get_emails

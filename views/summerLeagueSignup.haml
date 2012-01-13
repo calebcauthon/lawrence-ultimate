@@ -2,17 +2,18 @@
 	.overlay
 		.thankYouWrap Thanks - we'll email you when it's time!
 	.emailTagline I don't want to miss...
-	.signupOption
-		%input(type="checkbox" name="summer_league")
-		%label(name="summer_league") Summer League
-	.signupOption
-		%input(type="checkbox" name="pickup_games")
-		%label(name="pickup_games") Pickup Games
-	.signupOption
-		%input(type="checkbox" name="anything")
-		%label(name="anything") A thing
-	%br
 	%form(method="POST" action="signup")
+		.signupOption
+			%input(type="checkbox" name="summer_league")
+			%label(name="summer_league") Summer League
+		.signupOption
+			%input(type="checkbox" name="pickup_games")
+			%label(name="pickup_games") Pickup Games
+		.signupOption
+			%input(type="checkbox" name="anything")
+			%label(name="anything") A thing
+		%br
+	
 		%input.pristine(id="lusl-signup" name="email_address" value="email@address.com")
 		%button(id="lusl-signup-button") let me know!
-	
+		.tinyCaption (we'll try not to annoy you)
