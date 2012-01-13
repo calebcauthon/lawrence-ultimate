@@ -6,13 +6,16 @@ $(document).ready(function() {
 		else
 			return false;
 	};
+
+	var original_input = '';
 	var clearInput = function() {
+		original_input = $('#lusl-signup').val();
 		has_cleared_input = true;
-		$('#lusl-signup').val('');
+		$('#lusl-signup').removeClass('pristine').val('');
 	};
 	var undo_clearInput = function() {
 		has_cleared_input = false;
-		$('#lusl-signup').val('my email address is...');
+		$('#lusl-signup').addClass('pristine').val(original_input);
 	};
 	
 	var key_has_been_pressed = false;
