@@ -1,0 +1,35 @@
+%form(method='POST' action='/saved_emails/details/#{@id}')
+	%table
+		%th
+			%tr	
+				%td subj
+				%td 
+					%input.subject(name='subject' value='#{@saved_email['subject']}')
+			%tr
+				%td body
+				%td 
+					%textarea(name='body' rows=8 cols=50)
+						#{@saved_email['body']}
+			%tr
+				%td  
+				%td #{@saved_email['recipients'].count} recipients:
+			-@saved_email['recipients'].each do |email_address|
+				%tr
+					%td
+					%td 
+						#{email_address['email_address']}						
+						%a(href='/saved_emails/details/remove_email/#{@id}/#{email_address['_id']}') [x]
+			%tr
+				%td
+				%td 
+					%select(name='new_email_address')
+						-@email_addresses.each do |email_address|
+							%option(value='#{email_address['_id']}') #{email_address['email_address']}
+					%button(name='add') add
+
+			%tr 
+				%td
+				%td
+					%button(name='save') save
+					%button(name='send') send
+	

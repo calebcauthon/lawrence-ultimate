@@ -12,17 +12,21 @@
 			.bodyWrap
 				.headline
 					.logo
-						%img(src='/images/LUFL_logo_empty.png' width='100' height='100')
-						.copy Lawrence Ultimate
+						%a(href='/')
+							%img(src='/images/LUFL_logo_empty.png' width='100' height='100')
+							.copy Lawrence Ultimate
 						.tinyCopy ultimate frisbee in Lawrence, KS
 					.bullets
 						%ul
 							%li
-								%a(href="summer-league") summer league
+								%a(href='summer-league') summer league
 							%li fall league
 							%li pickup games
 				.menu
-					.item About
+					.item
+						%a(href='/') Home
+					.item 
+						%a(href='/about') About
 					.item Contact Us	
 				.contentWrap
 					=yield				

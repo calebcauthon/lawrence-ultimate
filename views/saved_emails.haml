@@ -1,0 +1,15 @@
+%table
+  %tr
+    %td
+    %td # recip
+    %td sched
+    %td re:
+
+  -@saved_emails.each do |this_saved_email|
+    %tr
+      %td
+        %a(href='saved_emails/details/#{this_saved_email['_id']}') details
+      %td #{this_saved_email['recipients'].count}
+      %td #{this_saved_email['schedule']}
+      %td #{this_saved_email['subject']}
+  
