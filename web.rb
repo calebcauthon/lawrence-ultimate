@@ -4,6 +4,7 @@ require 'sass'
 require 'mongo'
 require 'curb' 
 require './mailgun.rb'
+require './authentication.rb'
 
 get '/' do
 	haml :index, :layout => :layout
