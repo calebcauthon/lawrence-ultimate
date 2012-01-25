@@ -16,7 +16,7 @@ end
 
 get '/signup' do
 		haml :signup
-do
+end
 
 post '/signup' do
 	coll = grabTheEmailCollection
