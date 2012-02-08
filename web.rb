@@ -104,6 +104,18 @@ def grabTheEmailCollection
 	coll
 end
 
+def grabTheAttemptedToSignupForSummerLeagueCollection
+	db = Mongo::Connection.new('staff.mongohq.com', 10025).db('app2382060')
+	db.authenticate('heroku', 'heroku')	
+	coll = db.collection('attempted_to_sign_up')
+	coll
+end
+def grabTheSummerLeagueCollection
+	db = Mongo::Connection.new('staff.mongohq.com', 10025).db('app2382060')
+	db.authenticate('heroku', 'heroku')	
+	coll = db.collection('summer_league_list')
+	coll
+end
 def grabTheSavedEmailCollection
 	db = Mongo::Connection.new('staff.mongohq.com', 10025).db('app2382060')
 	db.authenticate('heroku', 'heroku')
@@ -113,13 +125,41 @@ def grabTheSavedEmailCollection
 	coll
 end
 
-post '/signup' do
-	coll = grabTheEmailCollection
-
-	doc = { 'email_address' => params['email_address'] }
+def addToListOfAttemptedToSignup(email)
+	coll = grabTheAttemptedToSignupForSummerLeagueCollection
+	doc = { 'email_address' => email, 'timestamp' => getTimestamp }
 	coll.insert(doc)
-	
+end
+def addToListOfSummerLeagueEmails(email)
+	coll = grabTheSummerLeagueCollection
+	isAlreadyOnList = false
+	coll.find().each do |thisEmail| 
+		if thisEmail['email_address'] == email
+			isAlreadyOnList = true
+		end
+	end
+
+	if isAlreadyOnList == false
+		doc = { 'email_address' => email, 'timestamp' => getTimestamp }
+		coll.insert(doc)
+	end
+end
+
+post '/signup' do
+	addToListOfAttemptedToSignup(params['email_address'])	
+	addToListOfSummerLeagueEmails(params['email_address'])
+
+	api_key = 'https://api.mailgun.net/v2'
+	api_url = 'key-31qllrfmv51h67b1nwoln0wjrd5qsuf9'
+	Mailgun.init(api_key, api_url)
+
+	MailgunMessage::send_raw('caleb@lawrenceultimate.com', 'calebcauthon@gmail.com', 'hello email world!')
+
 	haml :signup
+end
+
+def getTimestamp
+	DateTime.now.to_s
 end
 
 def send_email(email_address, email_body)
