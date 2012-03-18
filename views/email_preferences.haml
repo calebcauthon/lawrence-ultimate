@@ -1,0 +1,35 @@
+-if(@logged_in)
+	%div.span6
+		%form.well(method="POST" action="/email-preferences")
+			%div
+				%span Your email address:
+				%span #{@email_address}
+			%br
+			%div
+				%strong
+					-if(!@has_opted_out)
+						%span You are currently on the email list
+					-else
+						%span You are not currently receiving emails
+			%br
+				
+			%label.radio
+				-if(@has_opted_out)
+					%input(type="radio" name="keep_on_list" value="yes") Put me on the email list
+				-else
+					%input(type="radio" name="keep_on_list" value="yes" checked) Keep me on the email list
+					
+			%label.radio
+				-if(@has_opted_out)
+					%input(type="radio" name="keep_on_list" value="no" checked)	Keep me off the email list
+				-else
+					%input(type="radio" name="keep_on_list" value="no") Remove me from the email list
+
+			%button(type="submit" class="btn") Save preferences
+			%span or 
+			%a(href="/") Go back to the website
+
+-else
+	%div You need to log in:
+	%div
+				

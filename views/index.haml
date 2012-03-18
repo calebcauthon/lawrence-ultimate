@@ -1,10 +1,94 @@
-.blogWrap
-	It's winter, so nothing's really happening..
-.leftColumnWrap 
-	=haml :summerLeagueSignup
-	%br					
-	=haml :locations
-.rightColumnWrap
-	=haml :summerLeagueSchedule
+%a(name="summer-league") &nbsp;
+.row-fluid
+	.span12
+		.row-fluid
+			.span10(style="text-align:center;")
+				%h1 2012 Summer League
+		.row-fluid
+			.span2 &nbsp;
+			.span2
+				%i(class="icon-calendar")
+				%a(href="/" class="highlight" h="scheduleWrap") Schedule 
+			.span2
+				%i(class="icon-envelope")
+				%a(href="/" class="highlight" h="emailWrap") Email Updates
+			.span2
+				%i(class="icon-picture")
+				%a(href="/" class="highlight" h="locationWrap") Location	
+		.row-fluid &nbsp;
+		.row-fluid
+			.span6 &nbsp;
+				
+			.span6 &nbsp;
+				
+		.row-fluid
+			.span5.well.scheduleWrap
+				%h3 Schedule
+				%ul
+					%li.next 
+						%span
+							%strong Sunday, April 15: Online Signup begins
+					%li Friday, May 22: Online Signup ends
+					%li Saturday, May 23, 7pm: Draft teams
+					%li Tuesday, May 29, 6:30pm: Week #1
+					%li Tuesday, June 5, 6:30pm: Week #2
+					%li Tuesday, June 12, 6:30pm: Week #3
+					%li Tuesday, June 19, 6:30pm: Week #4
+					%li Tuesday, June 26, 6:30pm: Week #5
+					%li Tuesday, July 3, 6:30pm: Week #6
+					%li Tuesday, July 10, 6:30pm: Week #7
+					%li Tuesday, July 17, 6:30pm: Week #8
+					%li Tuesday, July 24, 6:30pm: Week #9
+					%li Tuesday, July 31, 6:30pm: Week #10
+					%li Tuesday, August 7, 6:30pm: Week #11
+					%li Sunday, August 12, 10:00am: Tournament
 
-=haml :summerLeagueSignupJS	
+			.span5.emailWrap.offset1.well.emailUpdatesWrap(class="#{@emailClass}")
+				%h3(style="white-space: nowrap;") 
+					Email Updates
+					%span.tinyCaption (we'll try not to annoy you)
+				-unless(@justSignedUp)
+					%a(name="email-sign-up") &nbsp;								
+					%form(method="POST" action="")
+						%input.pristine(id="lusl-signup" name="email_address" placeholder="email@address.com" class="span6")
+						%div
+							%button(type="submit" class="btn btn-primary" id="lusl-signup-button") sign me up!
+							%span or
+							%a(href="/email-preferences") edit my email preferences
+				-else
+					%div Thanks for signing up! 					
+					-if(@emailSent)
+						%br
+						%div We sent a verification email to #{@emailAddress}
+						%div 
+							%a(href="/email-preferences") Update your email preferences
+					-elsif(@alreadyVerified)
+						%br
+						%div This email is already on the list and verified. You must really like email.
+					-elsif(@hasEmailConfirmationWaiting)
+						%br
+						%div We sent a verification email to #{@emailAddress}
+			.span5.locationWrap.offset1.well
+				%h3 Location
+				%div
+					%a(href="http://g.co/maps/hrt2x") 
+						%div
+							YSI Sports Complex
+							%br
+							4911 West 27th Street, Lawrence, KS 66047
+							
+							
+			
+			
+:javascript
+	jQuery(document).ready(function() {
+		$('.highlight').unbind('mouseover').bind('mouseover', function() {
+			var classToHighlight = $(this).attr('h');
+			$('.'+classToHighlight).addClass('highlight')
+		}).unbind('mouseout').bind('mouseout', function() {
+			var classToHighlight = $(this).attr('h');
+			$('.'+classToHighlight).removeClass('highlight')
+		});		
+	});
+	
+

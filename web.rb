@@ -1,219 +1,250 @@
 require 'sinatra'
+require 'sinatra/contrib/all'
 require 'haml'
 require 'sass'
 require 'mongo'
 require 'curb' 
-require './mailgun.rb'
 require './authentication.rb'
+require './mailgun.rb'
+
+enable :sessions
+
+
+post '/email-preferences' do
+	if(params['keep_on_list'].eql? "yes")
+		keep_on_list = true
+	else
+		keep_on_list = false
+	end
+	puts params
+	
+	@email_id = session[:email_id]
+	doc = getTheDbEntryForThisEmailId(@email_id)
+	
+	doc['opted_out'] = !keep_on_list;
+	coll = getEmailListCollection	
+	coll.save(doc);
+	
+	get_email_preferences
+end
+
+get '/email-preferences' do
+	get_email_preferences
+end
+
+def get_email_preferences
+	@logged_in = session[:logged_in]
+	@email_id = session[:email_id]
+	doc = getTheDbEntryForThisEmailId(@email_id)
+	@email_address = doc['email_address']
+	
+	if(doc['opted_out'])
+		@has_opted_out = true
+	else
+		@has_opted_out = false
+	end
+	
+	haml :email_preferences, :layout => :bootstrap_template
+end
+
+post '/' do
+	addToListOfUnverifiedSummerLeagueEmails(params['email_address'])
+	@justSignedUp = true
+	get_index
+end
+
+def getEmailListCollection
+	grabCollection('email_list')
+end
+
+def getEmailStatusFromEmailId(emailID)
+	coll = getEmailListCollection
+	begin 
+		result = coll.find(:id => BSON::ObjectId(emailID)).next
+		if(result['verified'] == true)
+			return :verified
+		else
+			return :unverified
+		end
+	rescue StandardError => bang
+		return :not_found
+	end
+	
+	if(result.count > 0)
+		return :unverified
+	end	
+
+end
 
 get '/' do
-	haml :index, :layout => :layout
+	get_index
 end
+
+def get_index
+	haml :index, :layout => :bootstrap_template
+end
+
+get '/assets/js/:jsFile' do
+	File.read("assets/js/#{params['jsFile']}")
+end
+
+get %r{([^\.]+)\.asdfcss} do
+	File.read("assets/css/#{params[:captures].first}.css")
+end
+
+
 
 get '/about' do
 	haml :about, :layout => :layout
 end
 
-get '/saved_emails' do
-	coll = grabTheSavedEmailCollection
-	@saved_emails = coll.find()
 
-	haml :saved_emails
-end
-
-get '/saved_emails/details/:saved_email_id' do
-	coll = grabTheSavedEmailCollection
-
-	@id = params[:saved_email_id]
-	@saved_email = coll.find(:_id => BSON::ObjectId(params[:saved_email_id])).next
-	
-  coll = grabTheEmailCollection
-  @email_addresses = coll.find()
-
-	haml :saved_email_details
-end
-
-get '/saved_emails/details/remove_email/:saved_email_id/:email_address_id' do
-	saved_email_id = params[:saved_email_id]
-	email_address_id = params[:email_address_id]
-
-	saved_email_coll = grabTheSavedEmailCollection
-	this_saved_email = saved_email_coll.find(:_id => BSON::ObjectId(saved_email_id)).next
-	recipients = this_saved_email['recipients'].to_a
-
-	email_to_remove = recipients.delete_if { |email| email['_id'] == BSON::ObjectId(email_address_id) }
-	this_saved_email['recipients'] = recipients
-	saved_email_coll.save(this_saved_email)
-
-	show_details(saved_email_id)
-end
-
-def show_details(saved_email_id)
-	coll = grabTheSavedEmailCollection
-
-	@id = saved_email_id
-	@saved_email = coll.find(:_id => BSON::ObjectId(saved_email_id)).next
-	
-  coll = grabTheEmailCollection
-  @email_addresses = coll.find()
-
-	haml :saved_email_details
-end
-
-post '/saved_emails/details/:saved_email_id' do
-	saved_email_coll = grabTheSavedEmailCollection
-	@id = params[:saved_email_id]
-	@saved_email = saved_email_coll.find(:_id => BSON::ObjectId(params[:saved_email_id])).next
-	
-	if(params['subject'].nil? == false)
-		@saved_email['subject'] = params['subject']
-	end
-	
-	if(params['body'].nil? == false)
-		@saved_email['body'] = params['body']
-	end
-
-	if(params['add'].nil? == false)
-		new_id = params['new_email_address']
-		coll = grabTheEmailCollection
-		new_email = coll.find(:_id => BSON::ObjectId(new_id)).next
-
-		@saved_email['recipients'].push(new_email)
-	end
-
-	saved_email_coll.save(@saved_email)
-	
-	if(params['send'] == '')
-		@saved_email['sent'] = true;
-		@saved_email['sent_timestamp'] = Time.now
-		saved_email_coll.save(@saved_email)
-	end
-	
-	coll = grabTheEmailCollection
-  @email_addresses = coll.find()
-
-	haml :saved_email_details
-end
-
-def grabTheEmailCollection
-	db = Mongo::Connection.new('staff.mongohq.com', 10025).db('app2382060')
-	db.authenticate('heroku', 'heroku')
-	db.collection_names.each { |name| puts name }	
-	coll = db.collection('emails')
-	
-	coll
-end
-
-def grabTheAttemptedToSignupForSummerLeagueCollection
+def grabCollection(collectionName)
 	db = Mongo::Connection.new('staff.mongohq.com', 10025).db('app2382060')
 	db.authenticate('heroku', 'heroku')	
-	coll = db.collection('attempted_to_sign_up')
-	coll
-end
-def grabTheSummerLeagueCollection
-	db = Mongo::Connection.new('staff.mongohq.com', 10025).db('app2382060')
-	db.authenticate('heroku', 'heroku')	
-	coll = db.collection('summer_league_list')
-	coll
-end
-def grabTheSavedEmailCollection
-	db = Mongo::Connection.new('staff.mongohq.com', 10025).db('app2382060')
-	db.authenticate('heroku', 'heroku')
-	db.collection_names.each { |name| puts name }	
-	coll = db.collection('saved_emails')
-	
+	coll = db.collection(collectionName)
 	coll
 end
 
-def addToListOfAttemptedToSignup(email)
-	coll = grabTheAttemptedToSignupForSummerLeagueCollection
-	doc = { 'email_address' => email, 'timestamp' => getTimestamp }
-	coll.insert(doc)
-end
-def addToListOfSummerLeagueEmails(email)
-	coll = grabTheSummerLeagueCollection
-	isAlreadyOnList = false
-	coll.find().each do |thisEmail| 
-		if thisEmail['email_address'] == email
-			isAlreadyOnList = true
+
+
+def aVerificationEmailHasBeenSentToThisEmailAddress(doc)
+	if(!doc['emails'])
+		return false
+	end
+	
+	doc['emails'].each do |thisDoc| 
+		if(thisDoc['type'].eql? "verification")
+			return true
 		end
 	end
+	return false
+end
 
-	if isAlreadyOnList == false
-		doc = { 'email_address' => email, 'timestamp' => getTimestamp }
-		coll.insert(doc)
+def thisEmailAddressHasBeenVerified(doc) 
+	if(doc['verified'])
+		return true
+	else
+		return false
 	end
 end
 
-post '/signup' do
-	addToListOfAttemptedToSignup(params['email_address'])	
-	addToListOfSummerLeagueEmails(params['email_address'])
+def createDbEntryShowingThatAVerificationEmailHasBeenSent(doc) 
+	coll = grabCollection('email_list')
+	
+	if(!doc['emails'])
+		doc['emails'] = Array.new
+	end
+	
+	doc['emails'].push({"type" => "verification", 'timestamp' => getTimestamp})
+	coll.update({'_id' => doc['_id']}, doc)	
+end
 
-	api_key = 'https://api.mailgun.net/v2'
-	api_url = 'key-31qllrfmv51h67b1nwoln0wjrd5qsuf9'
-	Mailgun.init(api_key, api_url)
+def getTheDbEntryForThisEmailId(id)
+	coll = grabCollection('email_list')
+	doc = coll.find({'_id' => BSON::ObjectId(id.to_s)}).next
+	return doc
+end
 
-	MailgunMessage::send_raw('caleb@lawrenceultimate.com', 'calebcauthon@gmail.com', 'hello email world!')
 
-	haml :signup
+def getOrCreateTheDbEntryForThisEmailAddress(email)
+	coll = grabCollection('email_list')
+	result = coll.find({'email_address' => email})
+	
+	if(result.count == 0)
+		doc = { 'email_address' => email, 'timestamp' => getTimestamp, 'verified' => false}
+		doc_id = coll.insert(doc)
+		doc = coll.find_one({:_id => BSON::ObjectId(doc_id.to_s)})
+	else
+		doc = result.first		
+	end
+	
+	return doc
+end
+
+def aVerificationEmailNeedsToBeSent(doc)
+	if(!thisEmailAddressHasBeenVerified(doc) && !aVerificationEmailHasBeenSentToThisEmailAddress(doc))
+		return true
+	else
+		return false
+	end
+end
+
+def addToListOfUnverifiedSummerLeagueEmails(email)
+	@emailAddress = email
+	
+	doc = getOrCreateTheDbEntryForThisEmailAddress(email)
+	if(aVerificationEmailNeedsToBeSent(doc))
+		sendVerificationEmail(email)
+		createDbEntryShowingThatAVerificationEmailHasBeenSent(doc)					
+		
+		@accountWebkey = doc['_id'].to_s
+		@emailSent = true
+		@hasEmailConfirmationWaiting = true
+		session[:logged_in] = true
+		session[:email_id] = doc['_id']
+	elsif(thisEmailAddressHasBeenVerified(doc))
+		@alreadyVerified = true
+	else
+		@hasEmailConfirmationWaiting = true
+	end
+end
+
+
+def sendVerificationEmail(email_address)
+	api_url = 'https://api.mailgun.net/v2'
+	api_key = 'key-31qllrfmv51h67b1nwoln0wjrd5qsuf9'
+
+	id = get_the_object_id(email_address, 'email_list')
+
+	recipient = 'calebcauthon@gmail.com' #email_address
+	sender = "'Lawrence Ultimate eTeam' <caleb@lawrenceultimate.com>"
+	subject = 'Email Verification'
+	body = "Thanks for joining the Lawrence Ultimate community!
+
+Follow this link to verify your email address:
+http://localhost:5000/verify/#{id}
+
+Sincerely,
+Lawrence Ultimate eTeam"
+	
+	Mailgun::init(api_key)
+	MailgunMessage::send_text(sender, recipient, subject, body)
+end
+
+def get_the_object_id(email_address, collectionName)
+	coll = grabCollection(collectionName)
+	doc = coll.find({'email_address' => email_address}).next
+	object_id = doc['_id'].to_s
+	object_id
+end
+
+def markEmailAsVerified(doc_id)
+	coll = grabCollection('email_list')
+	doc = coll.find({'_id' => BSON::ObjectId(doc_id)}).next
+	doc['verified'] = true
+	coll.save(doc)
+end
+
+
+
+get '/verify/:email_id' do
+	markEmailAsVerified(params['email_id'])
+		
+	session[:logged_in] = true
+	session[:email_id] = params['email_id']
+
+	haml :verify, :layout => :bootstrap_template
 end
 
 def getTimestamp
 	DateTime.now.to_s
 end
 
-def send_email(email_address, email_body)
-	Mailgun::init("key-31qllrfmv51h67b1nwoln0wjrd5qsuf9")
-	MailgunMessage::send_text("caleb@lawrenceultimate.com",
-                          email_address,
-                          "email is pretty neat",
-                          email_body)
-end
-
-get '/notify' do
-	coll = grabTheEmailCollection
-	@emails = coll.find()
-	haml :notify
-end
-
-post '/notify' do
-	message_body = params['message_body']
-	
-	selected_emails = Array.new
-
-	if params['emails_selected'].nil? == false	
-		params['emails_selected'].each_index do |i|
-			if params['emails_selected'][i].eql? "on"
-				selected_emails.push(params['email_addresses'][i])
-			end
-		end	
-	end
-
-	if params['send'] == ''
-		selected_emails.each do |email_address|		
-			send_email(email_address, message_body)
-		end
-		haml :notify_submit
-	end
-
-	if params['save_for_later'] == ''
-		saved_email = { 'recipients' => selected_emails, 'body' => params['message_body'] }
-		coll = grabTheSavedEmailCollection
-		coll.insert(saved_email)
-		haml :notify_save		
-	end
-
-	if params['add'] == ''
-		email_address = params['new_email_address']
-	end
-
-
-end
-
 get '/style.css' do
 	sass :style
 end
 
-get '/js/index.js' do
-	File.read('js/index.js')
+get '/js/:file' do
+	File.read("js/#{params['file']}")
 end

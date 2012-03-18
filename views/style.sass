@@ -1,117 +1,59 @@
-.bodyWrap
-	font-family: Arial, sans-serif
-	margin: 0 auto
-	width: 900px
-	
-	.headline 	
-		border-bottom: 1px solid black
-		height: 110px	
-		padding-left: 30px
-		.logo
-			img 
-				position: absolute
-			.copy				
-				height: 40px
-				margin: 50px 0 0 96px				
-			a
-				color: black
-				text-decoration: none
-			.tinyCopy
-				font-family: normal
-				font-size: 12px
-				margin-left: 98px
-				text-align: left
-			float: left
-			font-family: 'Days One', sans-serif
-			font-size: 36px
-		.bullets
-			margin-top: 17px 
-			float: left
-	.menu
-		background-color: #E6E6E6
-		border-radius: 0 0 3px 3px
-		float: right
-		padding: 14px 8px 5px
-		.item
-			margin-bottom: 5px
-			a
-				text-decoration: none
-				color: black	
-	.contentWrap 
-		.blogWrap			
-			margin-top: 15px	
-			text-align: center
-		.leftColumnWrap 
-			clear: left
-			float: left		
-			padding-top: 15px			
-		.rightColumnWrap
-			float: left
-			margin-left: 15px
-			padding-top: 15px
-		padding: 0 100px
-
-.scheduleWrap 
-	background-color: #92D1F0
-	border-radius: 3px
-	color: #444445
+body 
+	padding-top: 30px !important
+	.hero-unit 
+		padding: 30px
+.tinyCaption 
+	font-size: .5em
+.logo
+	height: 90px
+.imageWrap
 	float: left
-	font-family: Arial, sans-serif
-	font-size: 12px
-	line-height: 20px
-	width: 300px 
-	padding: 10px
-	.next
-		color: black
-		font-weight: bold
-		font-size: 14px
-.subject
-	width: 400px
-
-.locations
-	.tagLine
-		font-size: 16px
-		font-weight: bold
-	background-color: #138753
-	border-radius: 3px
-	color: #E8FFF5
+.heroCopyWrap
 	float: left
-	margin-top: 15px
-	padding: 10px
-	width: 320px
-	iframe
-		margin-bottom: 5px
-	a
-		color: white
+	.copy 
+		clear: left
+		margin-top: 20px
+	.tinyCopy
+		clear: left
+a
+	i
 		text-decoration: none
+a
+	&:hover
+		i
+			text-decoration: none !important
+a.sl-link
+	&:hover
+		i
+			text-decoration: none !important
 
-.summerLeagueSignupWrap
-	background-color: #EBD05B
-	border-radius: 3px
-	clear: left
-	float: left
-	font-size: 12px
-	padding: 10px
-	.pristine
-		color: #9E9E9E
-	.emailTagLine
-		font-size: 16px
-	.overlay 
-		background-color: #EBD05B
+.emailUpdatesWrap
+	.justSignedUp
 		display: none
-		height: 70px
-		opacity: 0
-		position: absolute
-		width: 380px
-	.tinyCaption
-		color: #444445
-		font-size: 10px		
-		font-style: italic
-		margin: 2px 0 0 5px
+.emailUpdatesWrap.show_thanks
+	.justSignedUp
+		display: block
 
-.mission 
-	font-size: 40px
-.explain
-	margin-bottom: 10px
-	
-	
+.colorWrap 
+	border-radius: 3px
+	background-color: pink
+	height: 32px
+	padding: 12px 2px 0 10px
+.voting-row
+	height: 50px
+.color
+	float: left
+	width: 60px
+.votes
+	float: left
+	margin: -8px 0 0 3px
+	cursor: pointer
+	.vote
+		border-radius: 4px
+		padding: 2px
+	.upvote		
+		&:hover
+			background-color: #5BB75B			
+	.downvote
+		&:hover
+			background-color: #DA4F49			

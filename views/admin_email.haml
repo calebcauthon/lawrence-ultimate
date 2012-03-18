@@ -1,0 +1,27 @@
+%script(type="text/javascript" src="/js/admin_email.js")
+
+%button(class='saveButton')
+	save
+%button(class='cancelButton')
+	cancel
+.adminEmailTable
+	%table
+		%tr
+			%td time
+			%td email
+			%td status
+
+		-@unverified.each do |thisDoc|
+			%tr
+				%td
+					%span
+						=thisDoc['date']
+					%input(value='#{thisDoc['date']}')
+				%td
+					%span
+						=thisDoc['email_address']
+					%input(value='#{thisDoc['email_address']}')
+				%td
+					%span
+						=thisDoc['status']
+					%input(value='#{thisDoc['status']}')
