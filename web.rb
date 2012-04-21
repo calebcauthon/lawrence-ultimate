@@ -2,10 +2,7 @@ require 'sinatra'
 require 'sinatra/contrib/all'
 require 'haml'
 require 'sass'
-require 'mongo'
 require 'curb' 
-require './authentication.rb'
-require './mailgun.rb'
 
 enable :sessions
 
