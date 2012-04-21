@@ -3,7 +3,7 @@
 	.span12
 		.row-fluid
 			.span10(style="text-align:center;")
-				%h1 2012 Summer League
+				%h1 2012 Summer League - signups are open
 		.row-fluid
 			.span2 &nbsp;
 			.span2
@@ -16,6 +16,9 @@
 				%i(class="icon-picture")
 				%a(href="/" class="highlight" h="locationWrap") Location	
 		.row-fluid &nbsp;
+		.row-fluid
+			.span12(style="font-size:24px;") 
+				%a(href="/summer-league-signup") NEW: Sign up for 2012 Summer League!
 		.row-fluid
 			.span6 &nbsp;
 				
@@ -49,12 +52,11 @@
 					%span.tinyCaption (we'll try not to annoy you)
 				-unless(@justSignedUp)
 					%a(name="email-sign-up") &nbsp;								
-					%form(method="POST" action="")
-						%input.pristine(id="lusl-signup" name="email_address" placeholder="email@address.com" class="span6")
+
+					%form(action="http://lawrenceultimate.us4.list-manage.com/subscribe/post?u=9f62837be6c5a1f7ec773f8c4&id=47b71733a5" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank")
+						%input.pristine(type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required)
 						%div
-							%button(type="submit" class="btn btn-primary" id="lusl-signup-button") sign me up!
-							%span or
-							%a(href="/email-preferences") edit my email preferences
+							%button(type="submit" class="btn btn-primary" id="lusl-signup-button") sign me up!							
 				-else
 					%div Thanks for signing up! 					
 					-if(@emailSent)

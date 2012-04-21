@@ -1,3 +1,196 @@
-thank you for signing up
-%br
-=params["email_address"]
+%link{:href => "/wufoo/css/form.css", :type => "text/css", :rel => "stylesheet"}
+%script{:src => "/wufoo/js/wufoo.js"}		
+%div
+	%h2 2012 Lawrence Summer League Signup
+	%div Fill this out and then pay your $35 via PayPal to caleb@lawrenceultimate.com, or bring money the first night of the league on Tuesday, May 29
+	%form#form1.wufoo.topLabel.page{:action => "https://lawrenceultimate.wufoo.com/forms/z7x3x5/#public", :autocomplete => "off", :enctype => "multipart/form-data", :method => "post", :name => "form1", :novalidate => ""}
+		%ul
+			%li#foli6.notranslate
+				%label#title6.desc{:for => "Field6"}
+					Gender
+				%div
+					%select#Field6.field.select.small{:name => "Field6", :tabindex => "1"}
+						%option{:selected => "selected", :value => "Male"}
+							Male
+						%option{:value => "Female"}
+							Female
+			%li#foli1.notranslate
+				%label#title1.desc{:for => "Field1"}
+					Name
+					%span#req_1.req *
+				%span
+					%input#Field1.field.text.fn{:name => "Field1", :required => "", :size => "8", :tabindex => "2", :type => "text", :value => ""}/
+					%label{:for => "Field1"} First
+				%span
+					%input#Field2.field.text.ln{:name => "Field2", :required => "", :size => "14", :tabindex => "3", :type => "text", :value => ""}/
+					%label{:for => "Field2"} Last
+			%li#foli3.notranslate
+				%label#title3.desc{:for => "Field3"}
+					Email
+					%span#req_3.req *
+				%div
+					%input#Field3.field.text.medium{:maxlength => "255", :name => "Field3", :required => "", :spellcheck => "false", :tabindex => "4", :type => "email", :value => ""}/
+			%li#foli116.notranslate
+				%fieldset
+					<![if !IE | (gte IE 8)]>
+					%legend#title116.desc
+						Partner
+					<![endif]>
+					/[if lt IE 8]
+						<label id="title116" class="desc">
+						Partner
+						</label>
+					%div
+			%input#radioDefault_116{:name => "Field116", :type => "hidden", :value => ""}
+				%span
+					%input#Field116_0.field.radio{:checked => "checked", :name => "Field116", :tabindex => "5", :type => "radio", :value => "I'm signing up by myself"}
+					%label.choice{:for => "Field116_0"}
+						I'm signing up by myself
+				%span
+					%input#Field116_1.field.radio{:name => "Field116", :onmouseup => "document.getElementById('Field116_other').focus();", :tabindex => "6", :type => "radio", :value => "I'm attached to someone (write his or her name below)"}/
+					%label.choice{:for => "Field116_1", :onmouseup => "document.getElementById('Field116_other').focus();"}
+						I'm attached to someone (write his or her name below)
+					%input#Field116_other.field.text.other{:name => "Field116_other_I'm attached to someone (write his or her name below)", :onclick => "document.getElementById('Field116_1').checked = 'checked';", :tabindex => "7", :type => "text", :value => ""}/
+					%p#instruct116.instruct
+						%small
+							You're allowed to sign up with one other person, meaning that they will be on the same team
+							%b as long as the other person puts your name down too
+			%li#foli109.notranslate
+				%label#title109.desc{:for => "Field109"}
+					Your Shirt Size
+				%div
+					%select#Field109.field.select.small{:name => "Field109", :tabindex => "8"}
+						%option{:value => "Small"}
+							Small
+						%option{:selected => "selected", :value => "Medium"}
+							Medium
+						%option{:value => "Large"}
+							Large
+						%option{:value => "XL"}
+							XL
+						%option{:value => "2XL"}
+							2XL
+			%li#foli111.notranslate
+				%label#title111.desc{:for => "Field111"}
+					Height
+				%div
+					%select#Field111.field.select.medium{:name => "Field111", :tabindex => "9"}
+						%option{:value => "Short (Male under 5'6, Female under 5'0)"}
+							Short (Male under 5'6, Female under 5'0)
+						%option{:selected => "selected", :value => "Average (Male 5'7-5'9, Female 5'1-5'4)"}
+							Average (Male 5'7-5'9, Female 5'1-5'4)
+						%option{:value => "Tall (Male 5'10-6'1, Female 5'5-5'8)"}
+							Tall (Male 5'10-6'1, Female 5'5-5'8)
+						%option{:value => "Giant (Male above 6'2, Female above 5'8)"}
+							Giant (Male above 6'2, Female above 5'8)
+			%li#foli124.notranslate.section
+				%section
+					%h3#title124
+			%li#foli7.likert.notranslate.col4.hideNumbers
+				%table{:cellspacing => "0"}
+					%caption#title7
+						Indicate your level of awesomeness in the following areas:
+					%thead
+						%tr
+							%th  
+							%td Very Awesome
+							%td Impressive
+							%td Good
+							%td Bad
+					%tbody
+						%tr.statement7
+							%th
+								%label{:for => "Field7"} Throwing
+							%td{:title => "Very Awesome"}
+								%input#Field7_1{:name => "Field7", :tabindex => "10", :type => "radio", :value => "Very Awesome"}/
+								%label{:for => "Field7_1"} 1
+							%td{:title => "Impressive"}
+								%input#Field7_2{:name => "Field7", :tabindex => "11", :type => "radio", :value => "Impressive"}/
+								%label{:for => "Field7_2"} 2
+							%td{:title => "Good"}
+								%input#Field7_3{:name => "Field7", :tabindex => "12", :type => "radio", :value => "Good"}/
+								%label{:for => "Field7_3"} 3
+							%td{:title => "Bad"}
+								%input#Field7_4{:name => "Field7", :tabindex => "13", :type => "radio", :value => "Bad"}/
+								%label{:for => "Field7_4"} 4
+						%tr.alt.statement8
+							%th
+								%label{:for => "Field8"} Catching
+							%td{:title => "Very Awesome"}
+								%input#Field8_1{:name => "Field8", :tabindex => "14", :type => "radio", :value => "Very Awesome"}/
+								%label{:for => "Field8_1"} 1
+							%td{:title => "Impressive"}
+								%input#Field8_2{:name => "Field8", :tabindex => "15", :type => "radio", :value => "Impressive"}/
+								%label{:for => "Field8_2"} 2
+							%td{:title => "Good"}
+								%input#Field8_3{:name => "Field8", :tabindex => "16", :type => "radio", :value => "Good"}/
+								%label{:for => "Field8_3"} 3
+							%td{:title => "Bad"}
+								%input#Field8_4{:name => "Field8", :tabindex => "17", :type => "radio", :value => "Bad"}/
+								%label{:for => "Field8_4"} 4
+						%tr.statement9
+							%th
+								%label{:for => "Field9"} Running & Speed
+							%td{:title => "Very Awesome"}
+								%input#Field9_1{:name => "Field9", :tabindex => "18", :type => "radio", :value => "Very Awesome"}/
+								%label{:for => "Field9_1"} 1
+							%td{:title => "Impressive"}
+								%input#Field9_2{:name => "Field9", :tabindex => "19", :type => "radio", :value => "Impressive"}/
+								%label{:for => "Field9_2"} 2
+							%td{:title => "Good"}
+								%input#Field9_3{:name => "Field9", :tabindex => "20", :type => "radio", :value => "Good"}/
+								%label{:for => "Field9_3"} 3
+							%td{:title => "Bad"}
+								%input#Field9_4{:name => "Field9", :tabindex => "21", :type => "radio", :value => "Bad"}/
+								%label{:for => "Field9_4"} 4
+						%tr.alt.statement10
+							%th
+								%label{:for => "Field10"} Attitude / Spirit / Havng Fun
+							%td{:title => "Very Awesome"}
+								%input#Field10_1{:name => "Field10", :tabindex => "22", :type => "radio", :value => "Very Awesome"}/
+								%label{:for => "Field10_1"} 1
+							%td{:title => "Impressive"}
+								%input#Field10_2{:name => "Field10", :tabindex => "23", :type => "radio", :value => "Impressive"}/
+								%label{:for => "Field10_2"} 2
+							%td{:title => "Good"}
+								%input#Field10_3{:name => "Field10", :tabindex => "24", :type => "radio", :value => "Good"}/
+								%label{:for => "Field10_3"} 3
+							%td{:title => "Bad"}
+								%input#Field10_4{:name => "Field10", :tabindex => "25", :type => "radio", :value => "Bad"}/
+								%label{:for => "Field10_4"} 4
+			%li#foli114.notranslate
+				%fieldset
+					%label(id="title114" class="desc")
+						Attendance
+				%div
+					%input#radioDefault_114{:name => "Field114", :type => "hidden", :value => ""}
+					%span
+						%input#Field114_0.field.radio{:checked => "checked", :name => "Field114", :tabindex => "26", :type => "radio", :value => "I show up on time every week because I love ultimate!"}/
+						%label.choice{:for => "Field114_0"}
+							I show up on time every week because I love ultimate!
+					%span
+						%input#Field114_1.field.radio{:name => "Field114", :tabindex => "27", :type => "radio", :value => "I'll be there almost every week, most likely."}/
+						%label.choice{:for => "Field114_1"}
+							I'll be there almost every week, most likely.
+					%span
+						%input#Field114_2.field.radio{:name => "Field114", :tabindex => "28", :type => "radio", :value => "I'll definitely miss several weeks."}/
+						%label.choice{:for => "Field114_2"}
+							I'll definitely miss several weeks.
+					%span
+						%input#Field114_3.field.radio{:name => "Field114", :onmouseup => "document.getElementById('Field114_other').focus();", :tabindex => "29", :type => "radio", :value => "Other"}/
+						%label.choice{:for => "Field114_3", :onmouseup => "document.getElementById('Field114_other').focus();"}
+							Other
+					%input#Field114_other.field.text.other{:name => "Field114_other_Other", :onclick => "document.getElementById('Field114_3').checked = 'checked';", :tabindex => "30", :type => "text", :value => ""}/
+			%li#foli126.notranslate
+				%label#title126.desc{:for => "Field126"}
+					Anything else we should know?
+				%div
+					%textarea#Field126.field.textarea.medium{:cols => "50", :name => "Field126", :onkeyup => "", :rows => "10", :spellcheck => "true", :tabindex => "31"}
+			%li.buttons
+				%div
+					%input#saveForm.btTxt.submit{:name => "saveForm", :type => "submit", :value => "Submit"}/
+				%div You'll be directed to the paypal payment page
+			%li.hide
+				%label{:for => "comment"} Do Not Fill This Out
+				%textarea#comment{:cols => "1", :name => "comment", :rows => "1"}
+				%input#idstamp{:name => "idstamp", :type => "hidden", :value => "DjQSR5EyBEOy+K4MZwHTFgt/j9b7+K14rn21eH4lyIc="}/
