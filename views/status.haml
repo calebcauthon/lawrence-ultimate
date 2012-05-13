@@ -1,0 +1,28 @@
+%form(method="GET")
+	%span Type in your name to check your status:
+	%input(name="name")
+	%input(type="submit" value="Submit")
+
+
+-if(@foundThePerson)
+	.searchResults
+		%h1 #{@name}
+		%ul
+			%li
+				-if(@hasAPartner)
+					%span signed up w/ 
+					%span 
+						%a(href="/status?name=#{@nameOfThePartner}")
+							#{@nameOfThePartner}
+				-else
+					%span Going Solo
+			%li wants a #{@shirt} shirt
+			%li #{@height}
+-else 
+	-if(@isASearch)
+		%h1 No one named "#{@needle}" has signed up
+		
+		
+	
+	
+	
