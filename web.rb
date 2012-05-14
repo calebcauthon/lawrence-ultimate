@@ -2,7 +2,7 @@ require 'sinatra'
 require 'sinatra/contrib/all'
 require 'haml'
 require 'sass'
-require 'wufoo.rb' 
+require 'wufoo' 
 require 'pp'
 
 enable :sessions
