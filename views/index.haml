@@ -71,14 +71,6 @@
 					-elsif(@hasEmailConfirmationWaiting)
 						%br
 						%div We sent a verification email to #{@emailAddress}
-			.span5.offset1.well
-				%h3 Check your status
-				%form(method="GET" action="/status")
-					%div
-						%input(name="name" placeholder="Enter a name")
-						%input(type="submit")
-					
-			
 			.span5.locationWrap.offset1.well
 				%h3 Location
 				%div
