@@ -12,6 +12,10 @@ get '/' do
 	haml :index, :layout => :bootstrap_template
 end
 
+get '/teams' do
+	haml :teams, :layout => :bootstrap_template
+end
+
 get '/summer-league-signup' do
 	haml :signup, :layout => :bootstrap_template
 end
