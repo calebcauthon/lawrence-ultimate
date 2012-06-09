@@ -91,7 +91,6 @@ get '/standings' do
 	@teams.push(@red)	
 	@teams.push(@yellow)
 	@teams.push(@green)
-	@teams.push(@yellow)
 	@teams.push(@pink)
 	@teams.push(@black)
 	@teams.push(@orange)
