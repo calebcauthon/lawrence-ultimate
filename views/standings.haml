@@ -1,0 +1,22 @@
+%h1 Standings
+
+.standings
+	%table.table-striped.table.table-bordered
+		%thead
+			%th
+			%th Team
+			%th Wins
+			%th Losses
+			%th PF
+			%th PA
+		%tbody
+			-@rank = 1
+			-@teams.each do |team|
+				%tr
+					%td.rank ##{@rank}
+					%td #{team.name}
+					%td #{team.wins}
+					%td #{team.losses}
+					%td #{team.points_for}
+					%td #{team.points_against}
+				-@rank = @rank + 1
