@@ -3,6 +3,7 @@ require 'sinatra/contrib/all'
 require 'haml'
 require 'sass'
 require 'curb' 
+require 'mongo'
 
 enable :sessions
 
@@ -35,13 +36,15 @@ class Team
 	end
 	
 	def defeated(loser, points_for, points_against)
-		loser.losses = loser.losses + 1
-		loser.points_for = loser.points_for + points_against
-		loser.points_against = loser.points_against + points_for
-
 		@wins = @wins + 1
 		@points_for = @points_for + points_for
 		@points_against = @points_against + points_against
+	end
+
+	def lost_to(winner, points_for, points_against)
+		@losses = @losses + 1
+		@points_for = @points_for + points_against
+		@points_against = @points_against + points_for
 	end
 
 end
@@ -53,56 +56,34 @@ end
 get '/standings' do
 	@teams = Array.new
 	
-	@pink = Team.new
-	@pink.name = "Pink"
-
-	@blue = Team.new
-	@blue.name = "Blue"
-
-	@red = Team.new
-	@red.name = "Red"
-
-	@white = Team.new
-	@white.name = "White"
-
-	@black = Team.new
-	@black.name = "Black"
-
-	@yellow = Team.new
-	@yellow.name = "Yellow"
-
-	@orange = Team.new
-	@orange.name = "Orange"
-
-	@green = Team.new
-	@green.name = "Green"
-
-	@pink.defeated @blue,17,8
-	@white.defeated @red,17,13
-	@black.defeated @yellow,17,8
-	@orange.defeated @green,17,12
-
-	@red.defeated @black,15,12
-	@blue.defeated @green,15,12
-	@white.defeated @pink,17,15
-	@orange.defeated @yellow,15,12
 	
-	@teams.push(@blue)
-	@teams.push(@red)	
-	@teams.push(@yellow)
-	@teams.push(@green)
-	@teams.push(@pink)
-	@teams.push(@black)
-	@teams.push(@orange)
+	db = Mongo::Connection.new('ds033897.mongolab.com', 33897).db('heroku_app2357454')
+	db.authenticate('ccauthon', 'ccauthon')   
+	coll = db.collection('teams')
 
+	@teams_list = coll.find()
+	@teams_list.each do |team|
+		this_team = Team.new
+		this_team.name = team['name']
+
+		wins = team['wins'] || []
+		wins.each do |this_win|
+			this_team.defeated this_win['name'],this_win['PF'],this_win['PA']
+		end
+
+		losses = team['losses'] || []
+		losses.each do |this_loss|
+			this_team.lost_to this_loss['name'],this_loss['PF'],this_loss['PA']
+		end
+
+		@teams.push(this_team)
+	end
+	
 	@teams.sort!
-
 	haml :standings, :layout => :bootstrap_template
 end
 
 get '/teams' do
-
-
 	
 	haml :teams, :layout => :bootstrap_template
 end

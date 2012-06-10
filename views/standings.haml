@@ -20,3 +20,7 @@
 					%td #{team.points_for}
 					%td #{team.points_against}
 				-@rank = @rank + 1
+			-@teams_list.each do |team|
+				%tr
+					%td.rank #0
+					%td #{team['name']}
