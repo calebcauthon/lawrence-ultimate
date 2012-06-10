@@ -85,7 +85,7 @@ get '/standings' do
 	@red.defeated @black,15,12
 	@blue.defeated @green,15,12
 	@white.defeated @pink,17,15
-	@orange.defeated @yellow,15,10
+	@orange.defeated @yellow,15,12
 	
 	@teams.push(@blue)
 	@teams.push(@red)	
