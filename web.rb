@@ -53,6 +53,10 @@ get '/' do
 	haml :index, :layout => :bootstrap_template
 end
 
+get '/full_schedule' do
+	haml :full_schedule, :layout => :bootstrap_template
+end
+
 get '/standings' do
 	@teams = Array.new
 	
