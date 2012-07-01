@@ -1,3 +1,18 @@
 %form{"method" => "POST", "action" => "/email"}
+  %label{"for" => "to"} to:
+  %input{"name" => "to"}
+  %br
+  %label{"for" => "from"} from:
+  %input{"name" => "from"}
+  %br
+  %label{"for" => "text"} text:
+  %input{"name" => "text"}
+  %br
+  %label{"for" => "html"} html:
+  %input{"name" => "html"}
+  %br
+  %label{"for" => "subject"} subject:
+  %input{"name" => "subject"}
+  %br
   %input{"name" => "body", "value" => "something"}
   %input{"type" => "submit"}

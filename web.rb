@@ -5,6 +5,7 @@ require 'sass'
 require 'curb' 
 require 'mongo'
 require 'mail'
+require 'csv'
 
 enable :sessions
 
@@ -117,12 +118,79 @@ get '/js/:file' do
 	File.read("js/#{params['file']}")
 end
 
-get '/email' do
-  haml :email, :layout => :bootstrap_template
+get '/parse_emails' do
+  db = Mongo::Connection.new('ds033897.mongolab.com', 33897).db('heroku_app2357454')
+	db.authenticate('ccauthon', 'ccauthon')   
+	coll = db.collection('people')
+	
+  CSV.foreach("../lusl/public/emails.csv") do |row|
+    basic_email_address = row[0]
+    full_name_and_email = row[1]
+    full_name = row[2]
+    name_and_team = row[3]
+    team = row[4]
+    
+    doc = {"team" => team, "email_address" => basic_email_address, "full_name" => full_name, "full_name_and_email" => full_name_and_email}
+    
+    coll.insert(doc)
+    
+  end
+  haml :parse_emails, :layout => :bootstrap_template
 end
+
+get '/email' do
+  db = Mongo::Connection.new('ds033897.mongolab.com', 33897).db('heroku_app2357454')
+	db.authenticate('ccauthon', 'ccauthon')   
+	coll = db.collection('people')
+	@people = coll.find
+	
+  haml :manage_email, :layout => :bootstrap_template
+end
+
+def get_blue_emails
+  db = Mongo::Connection.new('ds033897.mongolab.com', 33897).db('heroku_app2357454')
+	db.authenticate('ccauthon', 'ccauthon')   
+	coll = db.collection('people')
+	@people = coll.find({"team" => "TEST"})
+	
+	email = Array.new
+	@people.each do |person|
+	  email.push person["full_name_and_email"]
+	end
+	
+	email.join(",")
+end
+
 post '/email' do
-  puts params.to_s
   @@params = params
+  
+  blue_email = get_blue_emails
+  red_email = "calebcauthon+red@gmail.com"
+  green_email = "calebcauthon+green@gmail.com"
+  white_email = "calebcauthon+white@gmail.com"
+  orange_email = "calebcauthon+orange@gmail.com"
+  green_email = "calebcauthon+green@gmail.com"
+  yellow_email = "calebcauthon+yellow@gmail.com"
+  pink_email = "calebcauthon+pink@gmail.com"
+  
+  if(@@params[:to].match("blue@") != nil)
+    to_email = blue_email
+  elsif(@@params[:to].match("red@") != nil)
+    to_email = red_email
+  elsif(@@params[:to].match("white@") != nil)
+    to_email = white_email
+  elsif(@@params[:to].match("black@") != nil)
+    to_email = black_email
+  elsif(@@params[:to].match("orange@") != nil)
+    to_email = orange_email
+  elsif(@@params[:to].match("green@") != nil)
+    to_email = green_email
+  elsif(@@params[:to].match("yellow@") != nil)
+    to_email = yellow_email
+  elsif(@@params[:to].match("pink@") != nil)
+    to_email = pink_email
+  end if
+  
   
   Mail.defaults do
     delivery_method :smtp, 
@@ -137,15 +205,15 @@ post '/email' do
   end
   
   mail = Mail.deliver do
-    to "calebcauthon@gmail.com"
-    from 'Blue Team <blue@lists.lawrenceultimate.com>'
-    subject 'ruby emails!'
+    to to_email
+    from @@params[:from]
+    subject @@params[:subject]
     text_part do
-      body @@params.to_s
+      body @@params[:text]
     end
     html_part do
       content_type 'text/html; charset=UTF-8'
-      body @@params.to_s
+      body @@params[:html]
     end
   end
 end

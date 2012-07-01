@@ -1,0 +1,15 @@
+%h1 LUSL Team Emails
+
+%table.table.table-bordered.table-striped.table-condensed
+  %t
+    %td team
+    %td name
+    %td email
+    
+  -@people.each do |person|
+    %tr
+      %td 
+        %input{"name" => "guid", "value" => "#{person["_id"]}"}
+        %input{"name" => "team", "value" => "#{person["team"]}"} 
+      %td #{person["full_name"]}
+      %td #{person["email_address"]}    
