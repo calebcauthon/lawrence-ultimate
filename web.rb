@@ -4,6 +4,7 @@ require 'haml'
 require 'sass'
 require 'curb' 
 require 'mongo'
+require 'mail'
 
 enable :sessions
 
@@ -114,4 +115,31 @@ end
 
 get '/js/:file' do
 	File.read("js/#{params['file']}")
+end
+
+get '/send_email' do
+  Mail.defaults do
+    delivery_method :smtp, 
+    { 
+    :address   => "smtp.sendgrid.net",
+    :port      => 587,
+    :domain    => "lawrenceultimate.com",
+    :user_name => "app2357454@heroku.com",
+    :password  => "Zontal5",
+    :authentication => 'plain',
+    :enable_starttls_auto => true }
+  end
+  
+  mail = Mail.deliver do
+    to 'calebcauthon@gmail.com'
+    from 'caleb <caleb@lawrenceultimate.com>'
+    subject 'ruby emails!'
+    text_part do
+      body 'Hello world in text'
+    end
+    html_part do
+      content_type 'text/html; charset=UTF-8'
+      body '<b>Hello world in HTML</b>'
+    end
+  end
 end
