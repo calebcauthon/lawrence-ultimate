@@ -117,22 +117,59 @@ get '/js/:file' do
 	File.read("js/#{params['file']}")
 end
 
-get '/send_email' do
+get '/email' do
+  haml :email, :layout => :bootstrap_template
+end
+post '/email' do
+  puts params.to_s
+  @@params = params
+  
   Mail.defaults do
     delivery_method :smtp, 
     { 
     :address   => "smtp.sendgrid.net",
     :port      => 587,
-    :domain    => "lawrenceultimate.com",
+    :domain => "lawrenceultimate.com",
     :user_name => "app2357454@heroku.com",
-    :password  => "Zontal5",
+    :password  => "9dtx7amf",
     :authentication => 'plain',
     :enable_starttls_auto => true }
   end
   
   mail = Mail.deliver do
-    to 'calebcauthon@gmail.com'
-    from 'caleb <caleb@lawrenceultimate.com>'
+    to "calebcauthon@gmail.com"
+    from 'Blue Team <blue@lists.lawrenceultimate.com>'
+    subject 'ruby emails!'
+    text_part do
+      body @@params.to_s
+    end
+    html_part do
+      content_type 'text/html; charset=UTF-8'
+      body @@params.to_s
+    end
+  end
+end
+
+blue_team_emails = []
+blue_team_emails.push("calebcauthon@gmail.com");
+blue_team_emails.push("caleb@lawrenceultimate.com");
+
+get '/blue-team-email' do
+  Mail.defaults do
+    delivery_method :smtp, 
+    { 
+    :address   => "smtp.sendgrid.net",
+    :port      => 587,
+    :domain => "lawrenceultimate.com",
+    :user_name => "app2357454@heroku.com",
+    :password  => "9dtx7amf",
+    :authentication => 'plain',
+    :enable_starttls_auto => true }
+  end
+  
+  mail = Mail.deliver do
+    to blue_team_emails.join(",")
+    from 'Blue Team <blue@listslawrenceultimate.com>'
     subject 'ruby emails!'
     text_part do
       body 'Hello world in text'
