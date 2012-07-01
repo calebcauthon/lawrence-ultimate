@@ -161,7 +161,7 @@ def get_blue_emails
 	email.join(",")
 end
 
-get '/email' do
+post '/email' do
   @@params = params
   
   blue_email = get_blue_emails
