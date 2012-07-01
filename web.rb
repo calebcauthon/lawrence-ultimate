@@ -209,7 +209,7 @@ post '/email' do
     to ""
     bcc to_email
     from from_email
-    subject params[:subject]
+    subject @@params[:subject]
     text_part do
       body @@params[:text]
     end
