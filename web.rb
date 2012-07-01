@@ -161,7 +161,7 @@ def get_blue_emails
 	email.join(",")
 end
 
-post '/email' do
+get '/email' do
   @@params = params
   
   blue_email = get_blue_emails
@@ -175,6 +175,7 @@ post '/email' do
   
   if(@@params[:to].match("blue@") != nil)
     to_email = blue_email
+    from_email = "Blue Team <blue@lawrenceultimate.com>"
   elsif(@@params[:to].match("red@") != nil)
     to_email = red_email
   elsif(@@params[:to].match("white@") != nil)
@@ -205,9 +206,10 @@ post '/email' do
   end
   
   mail = Mail.deliver do
-    to to_email
-    from @@params[:from]
-    subject @@params[:subject]
+    to ""
+    bcc to_email
+    from from_email
+    subject params[:subject]
     text_part do
       body @@params[:text]
     end
