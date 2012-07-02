@@ -147,11 +147,11 @@ get '/email' do
   haml :manage_email, :layout => :bootstrap_template
 end
 
-def get_blue_emails
+def get_emails_for_team(team)
   db = Mongo::Connection.new('ds033897.mongolab.com', 33897).db('heroku_app2357454')
 	db.authenticate('ccauthon', 'ccauthon')   
 	coll = db.collection('people')
-	@people = coll.find({"team" => "TEST"})
+	@people = coll.find({"team" => team})
 	
 	email = Array.new
 	@people.each do |person|
@@ -164,32 +164,33 @@ end
 post '/email' do
   @@params = params
   
-  blue_email = get_blue_emails
-  red_email = "calebcauthon+red@gmail.com"
-  green_email = "calebcauthon+green@gmail.com"
-  white_email = "calebcauthon+white@gmail.com"
-  orange_email = "calebcauthon+orange@gmail.com"
-  green_email = "calebcauthon+green@gmail.com"
-  yellow_email = "calebcauthon+yellow@gmail.com"
-  pink_email = "calebcauthon+pink@gmail.com"
-  
   if(@@params[:to].match("blue@") != nil)
-    to_email = blue_email
+    to_email = get_emails_for_team("BLUE")
     from_email = "Blue Team <blue@lawrenceultimate.com>"
   elsif(@@params[:to].match("red@") != nil)
-    to_email = red_email
+    to_email = get_emails_for_team("RED")
+    from_email = "Red Team <red@lawrenceultimate.com>"
   elsif(@@params[:to].match("white@") != nil)
-    to_email = white_email
+    to_email = get_emails_for_team("WHITE")
+    from_email = "White Team <white@lawrenceultimate.com>"
   elsif(@@params[:to].match("black@") != nil)
-    to_email = black_email
+    to_email = get_emails_for_team("BLACK")
+    from_email = "Black Team <black@lawrenceultimate.com>"
   elsif(@@params[:to].match("orange@") != nil)
-    to_email = orange_email
+    to_email = get_emails_for_team("ORANGE")
+    from_email = "Orange Team <orange@lawrenceultimate.com>"
   elsif(@@params[:to].match("green@") != nil)
-    to_email = green_email
+    to_email = get_emails_for_team("GREEN")
+    from_email = "Green Team <green@lawrenceultimate.com>"
   elsif(@@params[:to].match("yellow@") != nil)
-    to_email = yellow_email
+    to_email = get_emails_for_team("YELLOW")
+    from_email = "Yellow Team <yellow@lawrenceultimate.com>"
   elsif(@@params[:to].match("pink@") != nil)
-    to_email = pink_email
+    to_email = get_emails_for_team("PINK")
+    from_email = "Pink Team <pink@lawrenceultimate.com>"
+  elsif(@@params[:to].match("test@") != nil)
+    to_email = get_emails_for_team("TEST")
+    from_email = "Test Team <test@lawrenceultimate.com>"
   end if
   
   
