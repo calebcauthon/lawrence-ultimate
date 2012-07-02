@@ -1,3 +1,25 @@
 .standings { }
 .standings .table td.rank { font-size: 1.8em; text-align: center; }
 		
+.emails #red { color: red; }
+.emails #white { color: black; }
+.emails #green { color: green; }
+.emails #blue { color: blue; }
+.emails #black { color: black; }
+.emails #orange { color: orange; }
+.emails #yellow { color: yellow; }
+.emails #pink { color: pink; }
+
+.emails #red.active { background-color: red; color: white; }
+.emails #white.active { background-color: black; color: white; }
+.emails #green.active { background-color: green; color: white; }
+.emails #blue.active { background-color: blue; color: white; }
+.emails #black.active { background-color: black; color: white; }
+.emails #orange.active { background-color: orange; color: white; }
+.emails #yellow.active { background-color: yellow; color: white; }
+.emails #pink.active { background-color: pink; color: white; }
+
+.emails .colorbutton { border: 4px solid white; cursor: pointer; line-height: 50px; margin: 5px; padding: 3px; }
+
+.emails .colortable { display: none; }
+.emails .colortable.activetable { display: block; }

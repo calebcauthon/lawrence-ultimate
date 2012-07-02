@@ -90,8 +90,23 @@ get '/standings' do
 end
 
 get '/teams' do
+	  db = Mongo::Connection.new('ds033897.mongolab.com', 33897).db('heroku_app2357454')
+	db.authenticate('ccauthon', 'ccauthon')   
+	coll = db.collection('people')
+	@people = coll.find
 	
-	haml :teams, :layout => :bootstrap_template
+	@blue = get_emails_object_for_team("BLUE")
+	@green = get_emails_object_for_team("GREEN")
+	@white = get_emails_object_for_team("WHITE")
+	@red = get_emails_object_for_team("RED")
+	@black = get_emails_object_for_team("BLACK")
+	@yellow = get_emails_object_for_team("YELLOW")
+	@pink = get_emails_object_for_team("PINK")
+	@orange = get_emails_object_for_team("ORANGE")
+	
+	haml :manage_email, :layout => :bootstrap_template
+	
+	#haml :teams, :layout => :bootstrap_template
 end
 
 get '/summer-league-signup' do
@@ -144,7 +159,30 @@ get '/email' do
 	coll = db.collection('people')
 	@people = coll.find
 	
-  haml :manage_email, :layout => :bootstrap_template
+	@blue = get_emails_object_for_team("BLUE")
+	@green = get_emails_object_for_team("GREEN")
+	@white = get_emails_object_for_team("WHITE")
+	@red = get_emails_object_for_team("RED")
+	@black = get_emails_object_for_team("BLACK")
+	@yellow = get_emails_object_for_team("YELLOW")
+	@pink = get_emails_object_for_team("PINK")
+	@orange = get_emails_object_for_team("ORANGE")
+	
+	haml :manage_email, :layout => :bootstrap_template
+end
+
+def get_emails_object_for_team(team)
+  db = Mongo::Connection.new('ds033897.mongolab.com', 33897).db('heroku_app2357454')
+	db.authenticate('ccauthon', 'ccauthon')   
+	coll = db.collection('people')
+	people = coll.find({"team" => team})
+	
+	email = Array.new
+	people.each do |person|
+	  email.push person
+	end
+	
+	email
 end
 
 def get_emails_for_team(team)
