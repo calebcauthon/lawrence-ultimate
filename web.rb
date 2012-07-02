@@ -162,6 +162,7 @@ def get_emails_for_team(team)
 end
 
 post '/email' do
+  
   @@params = params
   
   if(@@params[:to].match("blue@") != nil)
@@ -209,7 +210,8 @@ post '/email' do
   mail = Mail.deliver do
     to ""
     bcc to_email
-    from from_email
+    from @@params[:from]
+    reply_to from_email
     subject @@params[:subject]
     text_part do
       body @@params[:text]
