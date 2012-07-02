@@ -220,34 +220,3 @@ post '/email' do
     end
   end
 end
-
-blue_team_emails = []
-blue_team_emails.push("calebcauthon@gmail.com");
-blue_team_emails.push("caleb@lawrenceultimate.com");
-
-get '/blue-team-email' do
-  Mail.defaults do
-    delivery_method :smtp, 
-    { 
-    :address   => "smtp.sendgrid.net",
-    :port      => 587,
-    :domain => "lawrenceultimate.com",
-    :user_name => "app2357454@heroku.com",
-    :password  => "9dtx7amf",
-    :authentication => 'plain',
-    :enable_starttls_auto => true }
-  end
-  
-  mail = Mail.deliver do
-    to blue_team_emails.join(",")
-    from 'Blue Team <blue@listslawrenceultimate.com>'
-    subject 'ruby emails!'
-    text_part do
-      body 'Hello world in text'
-    end
-    html_part do
-      content_type 'text/html; charset=UTF-8'
-      body '<b>Hello world in HTML</b>'
-    end
-  end
-end
