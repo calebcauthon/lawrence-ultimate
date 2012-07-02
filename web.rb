@@ -200,7 +200,7 @@ def get_emails_for_team(team)
 	email.join(",")
 end
 
-get '/email1' do
+post '/email' do
   @@params = params
   
   # need to add gem smoke_monster for this
