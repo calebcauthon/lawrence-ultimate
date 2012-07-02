@@ -51,6 +51,7 @@ GEM
       rack-test
       sinatra (~> 1.3.0)
       tilt (~> 1.3)
+    smoke_monster (0.2.2)
     thin (1.2.7)
       daemons (>= 1.0.9)
       eventmachine (>= 0.12.6)
@@ -75,4 +76,5 @@ DEPENDENCIES
   sass (= 3.1.12)
   sinatra
   sinatra-contrib
+  smoke_monster
   thin (= 1.2.7)
