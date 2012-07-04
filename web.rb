@@ -7,8 +7,15 @@ require 'mongo'
 require 'mail'
 require 'csv'
 require 'smoke_monster'
+require 'airbrake'
 
 enable :sessions
+
+Airbrake.configure do |config|
+  config.api_key = '665982ab7514b4ed09a2bf65c3110c7f'
+end
+
+use Airbrake::Rack
 
 
 class Team
@@ -62,7 +69,6 @@ end
 
 get '/standings' do
 	@teams = Array.new
-	
 	
 	db = Mongo::Connection.new('ds033897.mongolab.com', 33897).db('heroku_app2357454')
 	db.authenticate('ccauthon', 'ccauthon')   
