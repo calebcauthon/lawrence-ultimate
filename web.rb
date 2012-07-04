@@ -228,7 +228,7 @@ post '/email' do
   to_email = get_emails_for_team(item.team)
   from_email = item.from_email
   
-  Mail.defaults do
+  Mail.defaults do 
     delivery_method :smtp, 
     { 
     :address   => "smtp.sendgrid.net",
