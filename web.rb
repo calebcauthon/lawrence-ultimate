@@ -242,16 +242,16 @@ post '/email' do
   
   mail = Mail.deliver do
     to ""
-    bcc to_email.force_encoding("binary").to_crlf
-    from @@params[:from].force_encoding("binary").to_crlf
-    reply_to from_email.force_encoding("binary").to_crlf
-    subject @@params[:subject].force_encoding("binary").to_crlf
+    bcc to_email.force_encoding("UTF-8")
+    from @@params[:from].force_encoding("UTF-8")
+    reply_to from_email.force_encoding("UTF-8")
+    subject @@params[:subject].force_encoding("UTF-8")
     text_part do
-      body @@params[:text].force_encoding("binary").to_crlf
+      body @@params[:text].force_encoding("UTF-8")
     end
     html_part do
       content_type 'text/html; charset=UTF-8'
-      body @@params[:html].force_encoding("binary").to_crlf
+      body @@params[:html].force_encoding("UTF-8")
     end
   end
 end
