@@ -35,8 +35,6 @@ class String
   end
 end
 
-"cat".blank?
-
 class Team
 	include Comparable
 	attr_accessor :name, :wins, :losses, :points_for, :points_against
@@ -274,3 +272,8 @@ post '/email' do
     end
   end
 end
+
+get '/players' do
+  haml :players, :layout => :bootstrap_template
+end
+
