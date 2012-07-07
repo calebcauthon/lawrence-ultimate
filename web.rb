@@ -11,6 +11,8 @@ require 'smoke_monster'
 
 enable :sessions
 
+set :environment, :production
+
 configure :development do
   set :db_uri, 'ds033797.mongolab.com'
   set :db_port, 33797
