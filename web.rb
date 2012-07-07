@@ -48,21 +48,15 @@ end
 use Airbrake::Rack
 class String
 
- # A string is blank if it's empty or contains whitespaces only:
- #
- #   "".blank?                 # => true
- #   "   ".blank?              # => true
- #   "　".blank?               # => true
- #   " something here ".blank? # => false
- #
-  def blank?
-    # 1.8 does not takes [:space:] properly
-    if encoding_aware?
-      self !~ NON_WHITESPACE_REGEXP
-    else
-      self !~ NON_WHITESPACE_REGEXP
-    end
+ def encode_for_email
+    self.force_encoding('ISO-8859-1').encode!('UTF-8',invalid: :replace,undef: :replace,replace: '?')
   end
+  
+  def encode_for_html
+    self.gsub!(/</, '&lt;')
+    self.gsub!(/>/, '&gt;')
+  end
+  
 end
 
 class Team
@@ -293,17 +287,6 @@ def send_email(options)
       content_type 'text/html; charset=UTF-8'
       body options['html']
     end
-  end
-end
-
-class String
-  def encode_for_email
-    self.force_encoding('ISO-8859-1').encode!('UTF-8',invalid: :replace,undef: :replace,replace: '?')
-  end
-  
-  def encode_for_html
-    self.gsub!(/</, '&lt;')
-    self.gsub!(/>/, '&gt;')
   end
 end
 
