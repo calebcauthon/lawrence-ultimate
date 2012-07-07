@@ -18,14 +18,18 @@ configure :development do
 end
 
 configure :production do
-  
+  set :db_uri, 'ds033897.mongolab.com'
+  set :db_port, 33897
+  set :db_name, 'heroku_app2357454'
+  set :db_username, 'ccauthon'
+  set :db_pw, 'ccauthon'
 end
 
 
 
 def get_db
-  db = Mongo::Connection.new('ds033897.mongolab.com', 33897).db('heroku_app2357454')
-	db.authenticate('ccauthon', 'ccauthon')   
+  db = Mongo::Connection.new(settings.db_uri, settings.db_port).db(settings.db_name)
+	db.authenticate(settings.db_username, settings.db_pw)   
 	db
 end
 
