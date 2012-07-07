@@ -295,7 +295,7 @@ end
 
 def get_emails_for_recipient(to) 
   # remove the @ symbol and everything after it (e.g., "caleb@lawrenceultimate.com" => "caleb")
-  list = to.gsub(/@.+/, "")
+  list = to.gsub(/@.+/, "@lawrenceultimate.com").gsub(/[^<]+</, "")
   
   to_email = get_emails_for_email_list(list)
   to_email
@@ -329,9 +329,8 @@ post '/email' do
   puts params.to_s
 
   to_email = get_emails_for_recipient(params[:to])
-  from_email = params[:to].gsub(/@.+/, "@lawrenceultimate.com").gsub(/[^<]+</, "")
+  from_email = params[:to]
   
-  puts "turned #{params[:to]} into #{to_email}"
   send_email({
     "to" => "",
     "bcc" => to_email.encode_for_email,
