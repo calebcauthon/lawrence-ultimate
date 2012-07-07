@@ -11,7 +11,10 @@ require 'smoke_monster'
 
 enable :sessions
 
+#$stdout.sync = true
+
 set :environment, :production
+#puts "Using environment: #{settings.environment}"
 
 configure :development do
   set :db_uri, 'ds033797.mongolab.com'
@@ -244,9 +247,75 @@ def get_emails_for_team(team)
 	email.join(",")
 end
 
-post '/email' do
-  @@params = params
+def get_emails_for_email_list(list)
+  db = get_db
+	coll = db.collection('people')
+	@people = coll.find({"email-list" => list})
+	
+	email = Array.new
+	@people.each do |person|
+	  email.push person["full_name_and_email"]
+	end
+	
+	email.join(",")
+end
+
+def send_email(options)
+  Mail.defaults do 
+    delivery_method :smtp, 
+    { 
+    :address   => "smtp.sendgrid.net",
+    :port      => 587,
+    :domain => "lawrenceultimate.com",
+    :user_name => "app2357454@heroku.com",
+    :password  => "9dtx7amf",
+    :authentication => 'plain',
+    :enable_starttls_auto => true }
+  end
   
+  if(settings.environment == :development)
+    options['html'] = "Email would have gone to: [#{options['to'].encode_for_html}] and bcc'd [#{options['bcc'].encode_for_html}] -- \n<br /><br />  #{options['html']}"
+    options['to'] = "calebcauthon+devlist@gmail.com"
+    options['bcc'] = ""
+    options['subject'] = "dev: #{options['subject']}"
+  end
+  
+  mail = Mail.deliver do
+    to options['to']
+    bcc options['bcc']
+    from options['from']
+    reply_to options['reply_to']
+    subject options['subject']
+    text_part do
+      body options['text']
+    end
+    html_part do
+      content_type 'text/html; charset=UTF-8'
+      body options['html']
+    end
+  end
+end
+
+class String
+  def encode_for_email
+    self.force_encoding('ISO-8859-1').encode!('UTF-8',invalid: :replace,undef: :replace,replace: '?')
+  end
+  
+  def encode_for_html
+    self.gsub!(/</, '&lt;')
+    self.gsub!(/>/, '&gt;')
+  end
+end
+
+def get_emails_for_recipient(to) 
+  # remove the @ symbol and everything after it (e.g., "caleb@lawrenceultimate.com" => "caleb")
+  list = to.gsub(/@.+/, "")
+  
+  to_email = get_emails_for_email_list(list)
+  to_email
+end
+
+def get_reply_to_for_email_list(to) 
   # need to add gem smoke_monster for this
   items = [:to, :team, :from_email].to_objects {
     [
@@ -262,36 +331,28 @@ post '/email' do
     ]
   }  
 
-  item = items.select { |i| @@params[:to].include?(i.to) }[0]
-  to_email = get_emails_for_team(item.team)
+  item = items.select { |i| to.include?(i.to) }[0]
+  if(item.nil?)
+    return "no emails found for #{to}"
+  end
   from_email = item.from_email
+  from_email
+end
+
+post '/email' do
   
-  Mail.defaults do 
-    delivery_method :smtp, 
-    { 
-    :address   => "smtp.sendgrid.net",
-    :port      => 587,
-    :domain => "lawrenceultimate.com",
-    :user_name => "app2357454@heroku.com",
-    :password  => "9dtx7amf",
-    :authentication => 'plain',
-    :enable_starttls_auto => true }
-  end
+  to_email = get_emails_for_recipient(params[:to])
+  from_email = params[:to].gsub(/@.+/, "@lawrenceultimate.com")
   
-  mail = Mail.deliver do
-    to ""
-    bcc to_email.force_encoding('ISO-8859-1').encode!('UTF-8',invalid: :replace,undef: :replace,replace: '?')
-    from @@params[:from].force_encoding('ISO-8859-1').encode!('UTF-8',invalid: :replace,undef: :replace,replace: '?')
-    reply_to from_email.force_encoding('ISO-8859-1').encode!('UTF-8',invalid: :replace,undef: :replace,replace: '?')
-    subject @@params[:subject].force_encoding('ISO-8859-1').encode!('UTF-8',invalid: :replace,undef: :replace,replace: '?')
-    text_part do
-      body @@params[:text].force_encoding('ISO-8859-1').encode!('UTF-8',invalid: :replace,undef: :replace,replace: '?')
-    end
-    html_part do
-      content_type 'text/html; charset=UTF-8'
-      body @@params[:html].force_encoding('ISO-8859-1').encode!('UTF-8',invalid: :replace,undef: :replace,replace: '?')
-    end
-  end
+  send_email({
+    "to" => "",
+    "bcc" => to_email.encode_for_email,
+    "from" => params[:from].encode_for_email,
+    "reply_to" => from_email.encode_for_email,
+    "subject" => params[:subject].encode_for_email,
+    "text" => params[:text].encode_for_email,
+    "html" => params[:html].encode_for_email
+  })
 end
 
 post '/remove-from-list' do
