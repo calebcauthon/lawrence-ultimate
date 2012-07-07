@@ -23,3 +23,5 @@
 
 .emails .colortable { display: none; }
 .emails .colortable.activetable { display: block; }
+
+.icon-remove:hover { background-color: red; }

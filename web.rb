@@ -292,6 +292,23 @@ post '/email' do
   end
 end
 
+post '/remove-from-list' do
+  list = params[:list]
+  guid = params[:player_guid]
+  
+  db = get_db
+  coll = db.collection("people")
+  person = coll.find_one(:_id => BSON::ObjectId(guid))
+
+  person["email-list"].delete_if do |item|
+    item == list
+  end
+  
+  coll.save(person)
+  
+  "ok"
+end
+
 post '/add-to-list' do
   list = params[:list]
   guid = params[:player_guid]

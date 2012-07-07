@@ -12,16 +12,20 @@
 
 %table.table.table-bordered.table-striped.table-condensed{"style" => "margin-top: 10px;"}
   -@players.limit(10).each do |person|
-    %tr{"class" => "#{person["_id"]}"}
+    -guid = person["_id"]
+    -name = person["full_name"]
+    %tr{"class" => "#{person["_id"]}", "data-guid" => "#{guid}"}
       %td{"style" => "width: 30%;"}
-        #{person["full_name"]}
-      %td{"style" => "width: 10%;"}
-        %a.btn.btn-primary.add-to-list{"href" => "#listmodal", "data-toggle" => "modal", "data-name" => "#{person["full_name"]}", "data-guid" => "#{person["_id"]}"} add
+        #{name}
       %td.lists
-        -unless(person["email-list"].nil?)
-          -person["email-list"].each do |list|
-            %a.btn.btn-info{"href" => "?q=#{list}"} #{list}
-        
+        %span.list-section
+          -unless(person["email-list"].nil?)
+            -person["email-list"].each do |list|
+              %a.list-btn.btn.btn-info{"href" => "?q=#{list}", "data-list" => "#{list}"} 
+                #{list}
+                %i.icon-remove.icon-white.remove{"data-guid" => "#{guid}", "data-list" => "#{list}"}
+        %span
+          %a.add-to-list{"href" => "#listmodal", "data-toggle" => "modal", "data-name" => "#{name}", "data-guid" => "#{guid}"} add
 
 
 .modal.hide#listmodal
@@ -40,6 +44,10 @@
     %a.btn.btn-danger{"data-dismiss" => "modal"} Close    
     
 :javascript
+  $('#listmodal').on('shown', function() {
+    $('#email-list').focus();
+  });
+  
   $('.add-to-list').click(function() {
     $('#player-name').html( $(this).data('name') );
     $('#player-guid').val( $(this).data('guid') );
@@ -61,8 +69,42 @@
     $('#listmodal').modal('hide');
   });
   
+  var onRemoveClick = function() {
+    var guid = $(this).data('guid');
+    var list = $(this).data('list');
+    
+    $.post('/remove-from-list', {
+      player_guid: guid,
+      list: list
+    }, function(response) {
+      if(response == "ok") {
+        remove_list(guid, list)
+      } else {
+        console.log(response);
+      }
+    });
+  };
+  
+  $('.remove').click(function() {
+    onRemoveClick.call(this);
+    return false; // do not propagate this click
+  });
+  
+  var remove_list = function(guid, list) {
+    $('.'+guid+' .list-btn').each(function() {
+      var thisList = $(this).data('list');
+      if(thisList == list)
+        $(this).remove();
+    });
+  }
+  
   var add_list = function(guid, list) {
-    var html = '<a class="btn btn-info" href="?q='+list+'">'+list+'</a>'
-    $('tr.'+guid+' .lists').append(html);
+    var html = '<a class="remove list-btn btn btn-info" href="?q='+list+'" data-list="'+list+'">'+list+' <i class="icon-remove icon-white remove" data-guid="'+guid+'" data-list="'+list+'"></i></a>'
+    $('tr.'+guid+' .lists .list-section').append(html);
+    
+    $('tr.'+guid+' .remove').click(function() {
+      onRemoveClick.call(this);
+      return false; // do not propagate this click    
+    });
   }
     
