@@ -356,7 +356,7 @@ post '/email' do
   
   send_email({
     "to" => "calebcauthon+cc@gmail.com",
-    "bcc" => ""
+    "bcc" => "",
     "from" => params[:from].encode_for_email,
     "reply_to" => from_email.encode_for_email,
     "subject" => "bcc'ing",
