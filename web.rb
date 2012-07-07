@@ -327,6 +327,8 @@ get '/emailget' do
   to_email = get_emails_for_recipient(params[:to])
   from_email = params[:to].gsub(/@.+/, "@lawrenceultimate.com")
   
+  puts "to: #{to_email}, from: #{from_email}"
+  
   send_email({
     "to" => "",
     "bcc" => to_email.encode_for_email,
