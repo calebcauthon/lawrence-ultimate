@@ -18,8 +18,41 @@
         -unless(person["email-list"].nil?)
           -person["email-list"].each do |list|
             %a.btn.btn-info{"href" => "?q=#{list}"} #{list}
+        %a.btn.btn-primary.add-to-list{"href" => "#listmodal", "data-toggle" => "modal", "data-name" => "#{person["full_name"]}", "data-guid" => "#{person["_id"]}"} add
 
-.modal.hide#add-player
+
+.modal.hide#listmodal
+  .modal-header
+    %h2 
+      Add 
+      %span#player-name NAME
+      to email list
   .modal-body
-    test
+    %p
+      Name of the email list
+    %input#email-list
+    %input#player-guid{"type" => "hidden"}
+  .modal-footer
+    %a.btn.btn-success#save Save
+    %a.btn.btn-danger{"data-dismiss" => "modal"} Close    
+    
+:javascript
+  $('.add-to-list').click(function() {
+    $('#player-name').html( $(this).data('name') );
+    $('#player-guid').val( $(this).data('guid') );
+  });
+  
+  $('#listmodal #save').click(function() {
+    var list = $('#email-list').val();
+    var guid = $('#player-guid').val();
+    $.post('/add-to-list', {
+      player_guid: guid,
+      list: list
+    }, function(response) {
+      console.log(response);
+    });
+    
+    $('#listmodal').modal('hide');
+    
+  });
     

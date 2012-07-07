@@ -292,6 +292,23 @@ post '/email' do
   end
 end
 
+post '/add-to-list' do
+  list = params[:list]
+  guid = params[:player_guid]
+  
+  db = get_db
+  coll = db.collection("people")
+  person = coll.find_one(:_id => BSON::ObjectId(guid))
+  
+  if(person["email-list"].nil?)
+    person["email-list"] = Array.new
+  end
+  
+  person["email-list"].push(list)
+  
+  coll.save(person)
+end
+
 get '/players' do
   @list_to_search_for = params[:q]
   db = get_db
