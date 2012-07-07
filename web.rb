@@ -274,6 +274,8 @@ post '/email' do
 end
 
 get '/players' do
+  
+  
   haml :players, :layout => :bootstrap_template
 end
 
