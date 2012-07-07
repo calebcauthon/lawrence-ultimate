@@ -11,6 +11,25 @@ require 'smoke_monster'
 
 enable :sessions
 
+set :environment, :production
+
+configure :development do
+  
+end
+
+configure :production do
+  
+end
+
+
+
+def get_db
+  db = Mongo::Connection.new('ds033897.mongolab.com', 33897).db('heroku_app2357454')
+	db.authenticate('ccauthon', 'ccauthon')   
+	db
+end
+
+
 Airbrake.configure do |config|
   config.api_key = '665982ab7514b4ed09a2bf65c3110c7f'
 end
@@ -89,8 +108,7 @@ end
 get '/standings' do
 	@teams = Array.new
 	
-	db = Mongo::Connection.new('ds033897.mongolab.com', 33897).db('heroku_app2357454')
-	db.authenticate('ccauthon', 'ccauthon')   
+	db = get_db
 	coll = db.collection('teams')
 
 	@teams_list = coll.find()
@@ -116,8 +134,7 @@ get '/standings' do
 end
 
 get '/teams' do
-	  db = Mongo::Connection.new('ds033897.mongolab.com', 33897).db('heroku_app2357454')
-	db.authenticate('ccauthon', 'ccauthon')   
+	db = get_db
 	coll = db.collection('people')
 	@people = coll.find
 	
@@ -160,8 +177,7 @@ get '/js/:file' do
 end
 
 get '/parse_emails' do
-  db = Mongo::Connection.new('ds033897.mongolab.com', 33897).db('heroku_app2357454')
-	db.authenticate('ccauthon', 'ccauthon')   
+  db = get_db
 	coll = db.collection('people')
 	
   CSV.foreach("../lusl/public/emails.csv") do |row|
@@ -180,8 +196,7 @@ get '/parse_emails' do
 end
 
 get '/email' do
-  db = Mongo::Connection.new('ds033897.mongolab.com', 33897).db('heroku_app2357454')
-	db.authenticate('ccauthon', 'ccauthon')   
+  db = get_db
 	coll = db.collection('people')
 	@people = coll.find
 	
@@ -198,8 +213,7 @@ get '/email' do
 end
 
 def get_emails_object_for_team(team)
-  db = Mongo::Connection.new('ds033897.mongolab.com', 33897).db('heroku_app2357454')
-	db.authenticate('ccauthon', 'ccauthon')   
+  db = get_db 
 	coll = db.collection('people')
 	people = coll.find({"team" => team})
 	
@@ -212,8 +226,7 @@ def get_emails_object_for_team(team)
 end
 
 def get_emails_for_team(team)
-  db = Mongo::Connection.new('ds033897.mongolab.com', 33897).db('heroku_app2357454')
-	db.authenticate('ccauthon', 'ccauthon')   
+  db = get_db
 	coll = db.collection('people')
 	@people = coll.find({"team" => team})
 	
