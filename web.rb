@@ -296,7 +296,7 @@ get '/players' do
   @list_to_search_for = params[:q]
   db = get_db
   coll = db.collection("people")
-  @players = coll.find({"email-list" => @list_to_search_for})
+  @players = coll.find({ "$or" => [ {"email-list" => @list_to_search_for}, {"team" => @list_to_search_for} ] })
   
   haml :players, :layout => :bootstrap_template
 end
