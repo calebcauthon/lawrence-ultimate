@@ -14,6 +14,10 @@
   -@players.limit(10).each do |person|
     %tr
       %td #{person["full_name"]}
+      %td
+        -unless(person["email-list"].nil?)
+          -person["email-list"].each do |list|
+            %a.btn.btn-info{"href" => "?q=#{list}"} #{list}
 
 .modal.hide#add-player
   .modal-body
