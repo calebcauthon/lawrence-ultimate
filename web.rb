@@ -11,8 +11,6 @@ require 'smoke_monster'
 
 enable :sessions
 
-set :environment, :production
-
 configure :development do
   set :db_uri, 'ds033797.mongolab.com'
   set :db_port, 33797
@@ -295,7 +293,10 @@ post '/email' do
 end
 
 get '/players' do
-  
+  @list_to_search_for = params[:q]
+  db = get_db
+  coll = db.collection("people")
+  @players = coll.find({"email-list" => @list_to_search_for})
   
   haml :players, :layout => :bootstrap_template
 end

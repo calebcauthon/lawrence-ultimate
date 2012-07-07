@@ -1,10 +1,21 @@
-%h1 Player Management
+%h1 
+  Email List Management
+  %span{"style" => "color: blue;"} :
+  %span #{@list_to_search_for}
+  
+%br
 
-%a.btn{"data-toggle" => "modal", "href" => "#add-player"} Add Player
+%form{"method" => "get"}
+  %input{"name" => "q"}
+  %input.btn{"type" => "submit", "value" => "show list"}
+  
+
+%table.table.table-bordered.table-striped.table-condensed{"style" => "margin-top: 10px;"}
+  -@players.limit(10).each do |person|
+    %tr
+      %td #{person["full_name"]}
 
 .modal.hide#add-player
   .modal-body
     test
     
-:javascript
-  //$('#add-player').modal();
