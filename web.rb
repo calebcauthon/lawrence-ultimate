@@ -331,6 +331,7 @@ post '/email' do
   to_email = get_emails_for_recipient(params[:to])
   from_email = params[:to].gsub(/@.+/, "@lawrenceultimate.com").gsub(/[^<]+</, "")
   
+  puts "turned #{params[:to]} into #{to_email}"
   send_email({
     "to" => "",
     "bcc" => to_email.encode_for_email,
