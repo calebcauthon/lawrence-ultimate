@@ -307,6 +307,7 @@ post '/add-to-list' do
   person["email-list"].push(list)
   
   coll.save(person)
+  "ok"
 end
 
 get '/players' do
