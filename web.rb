@@ -297,8 +297,13 @@ def get_emails_for_recipient(to)
   # remove the @ symbol and everything after it (e.g., "caleb@lawrenceultimate.com" => "caleb")
   list = to.gsub(/@.+/, "@lawrenceultimate.com").gsub(/[^<]+</, "")
   
+
   to_email = get_emails_for_email_list(list)
+
+  puts "turned #{to} into #{list} into #{to_email}"
+
   to_email
+  
 end
 
 def get_reply_to_for_email_list(to) 
