@@ -10,11 +10,16 @@ require 'airbrake'
 require 'smoke_monster'
 
 enable :sessions
+Airbrake.configure do |config|
+  config.api_key = '665982ab7514b4ed09a2bf65c3110c7f'
+end
 
-#$stdout.sync = true
+use Airbrake::Rack
+
+$stdout.sync = true
 
 set :environment, :production
-#puts "Using environment: #{settings.environment}"
+puts "Using environment: #{settings.environment}"
 
 configure :development do
   set :db_uri, 'ds033797.mongolab.com'
@@ -41,14 +46,11 @@ def get_db
 end
 
 
-Airbrake.configure do |config|
-  config.api_key = '665982ab7514b4ed09a2bf65c3110c7f'
-end
 
-use Airbrake::Rack
+
 class String
 
- def encode_for_email
+  def encode_for_email
     self.force_encoding('ISO-8859-1').encode!('UTF-8',invalid: :replace,undef: :replace,replace: '?')
   end
   
@@ -352,7 +354,8 @@ end
 
 
 post '/email' do
-  
+  puts params.to_s
+
   to_email = get_emails_for_recipient(params[:to])
   from_email = params[:to].gsub(/@.+/, "@lawrenceultimate.com")
   
