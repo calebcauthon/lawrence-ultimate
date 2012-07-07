@@ -11,7 +11,7 @@
   
 
 %table.table.table-bordered.table-striped.table-condensed{"style" => "margin-top: 10px;"}
-  -@players.limit(10).each do |person|
+  -@players.each do |person|
     -guid = person["_id"]
     -name = person["full_name"]
     %tr{"class" => "#{person["_id"]}", "data-guid" => "#{guid}"}
