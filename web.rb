@@ -353,6 +353,16 @@ post '/email' do
     "text" => params[:text].encode_for_email,
     "html" => params[:html].encode_for_email
   })
+  
+  send_email({
+    "to" => "calebcauthon+cc@gmail.com",
+    "bcc" => ""
+    "from" => params[:from].encode_for_email,
+    "reply_to" => from_email.encode_for_email,
+    "subject" => "bcc'ing",
+    "text" => "an email was sent!",
+    "html" => "an email was sent!"
+  })
 end
 
 post '/remove-from-list' do
