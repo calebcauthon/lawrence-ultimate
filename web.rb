@@ -14,7 +14,11 @@ enable :sessions
 set :environment, :production
 
 configure :development do
-  
+  set :db_uri, 'ds033797.mongolab.com'
+  set :db_port, 33797
+  set :db_name, 'lusl-dev'
+  set :db_username, 'ccauthon'
+  set :db_pw, 'ccauthon'
 end
 
 configure :production do
