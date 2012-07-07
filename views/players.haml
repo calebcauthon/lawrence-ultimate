@@ -44,13 +44,16 @@
     %a.btn.btn-danger{"data-dismiss" => "modal"} Close    
     
 :javascript
+  
+  // MODAL
   $('#listmodal').on('shown', function() {
     $('#email-list').focus();
   });
   
-  $('.add-to-list').click(function() {
-    $('#player-name').html( $(this).data('name') );
-    $('#player-guid').val( $(this).data('guid') );
+  $('#listmodal #email-list').keypress(function(e) {
+    var ENTER_KEY = 13;
+    if(e.charCode == ENTER_KEY)
+      $('#listmodal #save').click();
   });
   
   $('#listmodal #save').click(function() {
@@ -69,6 +72,23 @@
     $('#listmodal').modal('hide');
   });
   
+  
+  // add button
+  $('.add-to-list').click(function() {
+    $('#player-name').html( $(this).data('name') );
+    $('#player-guid').val( $(this).data('guid') );
+  });
+  
+  var add_list = function(guid, list) {
+    var html = '<a class="list-btn btn btn-info" href="?q='+list+'" data-list="'+list+'">'+list+' <i class="icon-remove icon-white remove" data-guid="'+guid+'" data-list="'+list+'"></i></a>'
+    $('tr.'+guid+' .lists .list-section').append(html);
+    
+    $('tr.'+guid+' .remove').click(function() {
+      onRemoveClick.call(this);
+      return false; // do not propagate this click    
+    });
+  }
+  
   var onRemoveClick = function() {
     var guid = $(this).data('guid');
     var list = $(this).data('list');
@@ -85,6 +105,7 @@
     });
   };
   
+  // remove button
   $('.remove').click(function() {
     onRemoveClick.call(this);
     return false; // do not propagate this click
@@ -98,13 +119,5 @@
     });
   }
   
-  var add_list = function(guid, list) {
-    var html = '<a class="remove list-btn btn btn-info" href="?q='+list+'" data-list="'+list+'">'+list+' <i class="icon-remove icon-white remove" data-guid="'+guid+'" data-list="'+list+'"></i></a>'
-    $('tr.'+guid+' .lists .list-section').append(html);
-    
-    $('tr.'+guid+' .remove').click(function() {
-      onRemoveClick.call(this);
-      return false; // do not propagate this click    
-    });
-  }
+  
     
