@@ -19,6 +19,7 @@ use Airbrake::Rack
 $stdout.sync = true
 
 set :environment, :production
+
 puts "Using environment: #{settings.environment}"
 
 configure :development do
@@ -324,40 +325,11 @@ def get_reply_to_for_email_list(to)
   from_email
 end
 
-get '/emailget' do
-  
-  to_email = get_emails_for_recipient(params[:to])
-  from_email = params[:to].gsub(/@.+/, "@lawrenceultimate.com")
-  
-  puts "to: #{to_email}, from: #{from_email}"
-  
-  send_email({
-    "to" => "",
-    "bcc" => to_email.encode_for_email,
-    "from" => params[:from].encode_for_email,
-    "reply_to" => from_email.encode_for_email,
-    "subject" => params[:subject].encode_for_email,
-    "text" => params[:text].encode_for_email,
-    "html" => params[:html].encode_for_email
-  })
-  
-  send_email({
-    "to" => "calebcauthon+cc@gmail.com",
-    "bcc" => "",
-    "from" => params[:from].encode_for_email,
-    "reply_to" => from_email.encode_for_email,
-    "subject" => "bcc'ing",
-    "text" => "an email was sent!",
-    "html" => "an email was sent!"
-  })
-end
-
-
 post '/email' do
   puts params.to_s
 
   to_email = get_emails_for_recipient(params[:to])
-  from_email = params[:to].gsub(/@.+/, "@lawrenceultimate.com")
+  from_email = params[:to].gsub(/@.+/, "@lawrenceultimate.com").gsub(/[^<]+</, "")
   
   send_email({
     "to" => "",
