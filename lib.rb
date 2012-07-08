@@ -11,8 +11,15 @@ def get_emails_object_for_team(team)
 	email
 end
 
+class MailingListTranslator
+  def self.get_inbox_from_email_address(email_address)
+    inbox = email_address.gsub(/@.+/, "").gsub(/[^<]+</, "")
+    inbox
+  end
+end
+
 class MailingList
-  def get_emails_for_email_list(list)
+  def self.get_emails_for_email_list(list)
     db = get_db
     coll = db.collection('people')
     @people = coll.find({"email-list" => list})
@@ -26,27 +33,9 @@ class MailingList
   end
 end
 
-def get_emails_for_email_list(list)
-  db = get_db
-	coll = db.collection('people')
-	@people = coll.find({"email-list" => list})
-	
-	email = Array.new
-	@people.each do |person|
-	  email.push person["full_name_and_email"]
-	end
-	
-	email.join(",")
-end
-
-
 def get_emails_for_recipient(to) 
-  # remove the @ symbol and everything after it (e.g., "caleb@lawrenceultimate.com" => "caleb")
-  list = to.gsub(/@.+/, "").gsub(/[^<]+</, "")
-  
-
-  to_email = get_emails_for_email_list(list)
-
+  list = MailingListTranslator.get_inbox_from_email_address(to)
+  to_email = MailingList.get_emails_for_email_list(list)
   to_email
 end
 
