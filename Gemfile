@@ -13,3 +13,8 @@ gem 'mail'
 gem 'fastercsv'
 gem 'airbrake'
 gem 'smoke_monster'
+gem 'bson_ext'
+
+group :test do
+  gem 'rspec'
+end

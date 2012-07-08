@@ -3,11 +3,15 @@ require 'sinatra/contrib/all'
 require 'haml'
 require 'sass'
 require 'curb' 
-require 'mongo'
 require 'mail'
 require 'csv'
 require 'airbrake'
 require 'smoke_monster'
+require File.join(File.dirname(__FILE__), 'database.rb')
+require File.join(File.dirname(__FILE__), 'extensions.rb')
+require File.join(File.dirname(__FILE__), 'team.rb')
+require File.join(File.dirname(__FILE__), 'lib.rb')
+
 
 enable :sessions
 Airbrake.configure do |config|
@@ -17,10 +21,6 @@ end
 use Airbrake::Rack
 
 $stdout.sync = true
-
-set :environment, :production
-
-puts "Using environment: #{settings.environment}"
 
 configure :development do
   set :db_uri, 'ds033797.mongolab.com'
@@ -36,71 +36,6 @@ configure :production do
   set :db_name, 'heroku_app2357454'
   set :db_username, 'ccauthon'
   set :db_pw, 'ccauthon'
-end
-
-
-
-def get_db
-  db = Mongo::Connection.new(settings.db_uri, settings.db_port).db(settings.db_name)
-	db.authenticate(settings.db_username, settings.db_pw)   
-	db
-end
-
-
-
-
-class String
-
-  def encode_for_email
-    self.force_encoding('ISO-8859-1').encode!('UTF-8',invalid: :replace,undef: :replace,replace: '?')
-  end
-  
-  def encode_for_html
-    self.gsub!(/</, '&lt;')
-    self.gsub!(/>/, '&gt;')
-  end
-  
-end
-
-class Team
-	include Comparable
-	attr_accessor :name, :wins, :losses, :points_for, :points_against
-
-	def <=>(other)
-		if(@wins > other.wins)
-			return -1
-		elsif(@wins < other.wins)
-			return 1
-		else
-			if(@points_for > other.points_for)
-				return -1
-			elsif(@points_for < other.points_for)
-				return 1
-			else
-				return 0
-			end
-		end
-	end	
-
-	def initialize 
-		@wins = 0
-		@losses = 0
-		@points_for = 0
-		@points_against = 0
-	end
-	
-	def defeated(loser, points_for, points_against)
-		@wins = @wins + 1
-		@points_for = @points_for + points_for
-		@points_against = @points_against + points_against
-	end
-
-	def lost_to(winner, points_for, points_against)
-		@losses = @losses + 1
-		@points_for = @points_for + points_against
-		@points_against = @points_against + points_for
-	end
-
 end
 
 get '/' do
@@ -182,81 +117,6 @@ get '/js/:file' do
 	File.read("js/#{params['file']}")
 end
 
-get '/parse_emails' do
-  db = get_db
-	coll = db.collection('people')
-	
-  CSV.foreach("../lusl/public/emails.csv") do |row|
-    basic_email_address = row[0]
-    full_name_and_email = row[1]
-    full_name = row[2]
-    name_and_team = row[3]
-    team = row[4]
-    
-    doc = {"team" => team, "email_address" => basic_email_address, "full_name" => full_name, "full_name_and_email" => full_name_and_email}
-    
-    coll.insert(doc)
-    
-  end
-  haml :parse_emails, :layout => :bootstrap_template
-end
-
-get '/email' do
-  db = get_db
-	coll = db.collection('people')
-	@people = coll.find
-	
-	@blue = get_emails_object_for_team("BLUE")
-	@green = get_emails_object_for_team("GREEN")
-	@white = get_emails_object_for_team("WHITE")
-	@red = get_emails_object_for_team("RED")
-	@black = get_emails_object_for_team("BLACK")
-	@yellow = get_emails_object_for_team("YELLOW")
-	@pink = get_emails_object_for_team("PINK")
-	@orange = get_emails_object_for_team("ORANGE")
-	
-	haml :manage_email, :layout => :bootstrap_template
-end
-
-def get_emails_object_for_team(team)
-  db = get_db 
-	coll = db.collection('people')
-	people = coll.find({"team" => team})
-	
-	email = Array.new
-	people.each do |person|
-	  email.push person
-	end
-	
-	email
-end
-
-def get_emails_for_team(team)
-  db = get_db
-	coll = db.collection('people')
-	@people = coll.find({"team" => team})
-	
-	email = Array.new
-	@people.each do |person|
-	  email.push person["full_name_and_email"]
-	end
-	
-	email.join(",")
-end
-
-def get_emails_for_email_list(list)
-  db = get_db
-	coll = db.collection('people')
-	@people = coll.find({"email-list" => list})
-	
-	email = Array.new
-	@people.each do |person|
-	  email.push person["full_name_and_email"]
-	end
-	
-	email.join(",")
-end
-
 def send_email(options)
   Mail.defaults do 
     delivery_method :smtp, 
@@ -293,46 +153,8 @@ def send_email(options)
   end
 end
 
-def get_emails_for_recipient(to) 
-  # remove the @ symbol and everything after it (e.g., "caleb@lawrenceultimate.com" => "caleb")
-  list = to.gsub(/@.+/, "").gsub(/[^<]+</, "")
-  
-
-  to_email = get_emails_for_email_list(list)
-
-  puts "turned #{to} into #{list} into #{to_email}"
-
-  to_email
-  
-end
-
-def get_reply_to_for_email_list(to) 
-  # need to add gem smoke_monster for this
-  items = [:to, :team, :from_email].to_objects {
-    [
-      ["blue@", "BLUE", "Blue Team <blue@lawrenceultimate.com>"],
-      ["red@", "RED", "Red Team <red@lawrenceultimate.com>"],
-      ["white@", "WHITE", "White Team <white@lawrenceultimate.com>"],
-      ["black@", "BLACK", "Black Team <black@lawrenceultimate.com>"],
-      ["orange@", "ORANGE", "Orange Team <orange@lawrenceultimate.com>"],
-      ["green@", "GREEN", "Green Team <green@lawrenceultimate.com>"],   
-      ["yellow@", "YELLOW", "Yellow Team <yellow@lawrenceultimate.com>"],
-      ["pink@", "PINK", "Pink Team <pink@lawrenceultimate.com>"],
-      ["test@", "TEST", "Test Team <test@lawrenceultimate.com>"]
-    ]
-  }  
-
-  item = items.select { |i| to.include?(i.to) }[0]
-  if(item.nil?)
-    return "no emails found for #{to}"
-  end
-  from_email = item.from_email
-  from_email
-end
 
 post '/email' do
-  puts params.to_s
-
   to_email = get_emails_for_recipient(params[:to])
   from_email = params[:to].gsub(/@lists\.lawrenceultimate\.com/, "@lawrenceultimate.com")
   
