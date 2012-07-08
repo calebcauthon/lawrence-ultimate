@@ -1,4 +1,3 @@
-
 require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 
 describe "Sinatra App" do
@@ -7,7 +6,30 @@ describe "Sinatra App" do
     last_response.should be_ok
   end
 end
-
+describe "get_emails_for_recipient" do
+  it "should exist" do
+    get_emails_for_recipient ""
+  end
+  it "should return 1 result for asdf@lawrenceultimate.com" do
+    email_list = "asdf"
+    to = "#{email_list}@lawrenceultimate.com"
+    
+    expected_result = "caleb-asdf@lawrenceultimate.com"
+    
+    person = {"email-list" => email_list, "full_name_and_email" => expected_result}
+    db = get_db
+    coll = db.collection("people")
+    coll.remove({"email-list" => email_list})
+    coll.save(person)
+    
+    result = get_emails_for_recipient(to)
+    
+    # clean up
+    coll.remove(person)
+    
+    result.should == expected_result
+  end
+end
 describe "Mailing List" do
   it "should have a get_emails_for_email_list method" do
     MailingList.get_emails_for_email_list ""
