@@ -5,6 +5,52 @@ describe "Sinatra App" do
     get '/'
     last_response.should be_ok
   end
+  
+  
+  def send_email
+    "ok"
+  end
+  it "should be able to over write the send_email method" do
+    send_email.should == "ok"
+  end
+  
+  module Mail 
+    @@options
+    def self.options
+      @@options
+    end
+    def self.send_email(options)
+      @@options = options
+    end
+  end
+  
+  it "should response to POST /email" do
+    post '/email', :to => "calebcauthon@gmail.com", :from => "from@gmail.com", :subject => "subject", :text => "text", :html => "html"
+    last_response.should be_ok
+    
+    Mail.options["to"].should == ""
+  end
+  
+  it "should send an email bcc'ing caleb-blue@lawrenceultimate.com if blue@lawrenceultimate.com is the to address" do
+    list = "blue"
+    to = "#{list}@lawrenceultimate.com"
+    expected_to = "caleb-blue@lawrenceultimate.com"
+    
+    person = {"full_name_and_email" => expected_to, "email-list" => list}
+    db = get_db
+    coll = db.collection("people")
+    coll.remove({"email-list" => list})
+    coll.save(person)
+    
+    post '/email', :to => "#{to}", :from => "from@gmail.com", :subject => "subject", :text => "text", :html => "html"
+      
+    # clean up
+    coll.remove(person)
+    
+    Mail.options["bcc"].should == expected_to
+  end
+  
+  
 end
 describe "get_emails_for_recipient" do
   it "should exist" do

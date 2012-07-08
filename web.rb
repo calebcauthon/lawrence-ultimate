@@ -117,48 +117,14 @@ get '/js/:file' do
 	File.read("js/#{params['file']}")
 end
 
-def send_email(options)
-  Mail.defaults do 
-    delivery_method :smtp, 
-    { 
-    :address   => "smtp.sendgrid.net",
-    :port      => 587,
-    :domain => "lawrenceultimate.com",
-    :user_name => "app2357454@heroku.com",
-    :password  => "9dtx7amf",
-    :authentication => 'plain',
-    :enable_starttls_auto => true }
-  end
-  
-  if(settings.environment == :development)
-    options['html'] = "Email would have gone to: [#{options['to'].encode_for_html}] and bcc'd [#{options['bcc'].encode_for_html}] -- \n<br /><br />  #{options['html']}"
-    options['to'] = "calebcauthon+devlist@gmail.com"
-    options['bcc'] = ""
-    options['subject'] = "dev: #{options['subject']}"
-  end
-  
-  mail = Mail.deliver do
-    to options['to']
-    bcc options['bcc']
-    from options['from']
-    reply_to options['reply_to']
-    subject options['subject']
-    text_part do
-      body options['text']
-    end
-    html_part do
-      content_type 'text/html; charset=UTF-8'
-      body options['html']
-    end
-  end
-end
+
 
 
 post '/email' do
   to_email = get_emails_for_recipient(params[:to])
   from_email = params[:to].gsub(/@lists\.lawrenceultimate\.com/, "@lawrenceultimate.com")
   
-  send_email({
+  Mail.send_email({
     "to" => "",
     "bcc" => to_email.encode_for_email,
     "from" => params[:from].encode_for_email,
@@ -166,16 +132,6 @@ post '/email' do
     "subject" => params[:subject].encode_for_email,
     "text" => params[:text].encode_for_email,
     "html" => params[:html].encode_for_email
-  })
-  
-  send_email({
-    "to" => "calebcauthon+cc@gmail.com",
-    "bcc" => "",
-    "from" => params[:from].encode_for_email,
-    "reply_to" => from_email.encode_for_email,
-    "subject" => "bcc'ing",
-    "text" => "an email was sent!",
-    "html" => "an email was sent!"
   })
 end
 
