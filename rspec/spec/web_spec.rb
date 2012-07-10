@@ -30,7 +30,6 @@ describe "Sinatra App" do
     
     Mail.options["to"].should == ""
   end
-  
   it "should send an email bcc'ing caleb-blue@lawrenceultimate.com if blue@lawrenceultimate.com is the to address" do
     list = "blue"
     to = "#{list}@lawrenceultimate.com"
@@ -49,9 +48,33 @@ describe "Sinatra App" do
     
     Mail.options["bcc"].should == expected_to
   end
-  
-  
+  it "should pass long the subject as-is" do
+    subject = "asdf 1234"
+    post '/email', :to => "", :from => "", :subject => "#{subject}", :text => "", :html => ""
+    
+    Mail.options["subject"].should == subject
+  end
+  it "should pass long the html body as-is" do
+    html_body = "asdf 1234"
+    post '/email', :to => "", :from => "", :subject => "", :text => "", :html => "#{html_body}"
+    
+    Mail.options["html"].should == html_body
+  end
+  it "should pass long the text body as-is" do
+    text_body = "asdf 1234"
+    post '/email', :to => "", :from => "", :subject => "", :text => "#{text_body}", :html => ""
+    
+    Mail.options["text"].should == text_body
+  end
+  it "should pass long the from as-is" do
+    from = "asdf 1234"
+    post '/email', :to => "", :from => "#{from}", :subject => "", :text => "", :html => ""
+    
+    Mail.options["from"].should == from
+  end
+
 end
+
 describe "get_emails_for_recipient" do
   it "should exist" do
     get_emails_for_recipient ""
