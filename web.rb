@@ -15,6 +15,9 @@ end
 
 use Airbrake::Rack
 
+set :raise_errors, true
+set :show_exceptions, true
+
 configure :development do
   set :db_uri, 'ds033797.mongolab.com'
   set :db_port, 33797
