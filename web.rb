@@ -9,6 +9,11 @@ require 'csv'
 require 'airbrake'
 use Airbrake::Rack
 
+Airbrake.configure do |config|
+  config.api_key = '665982ab7514b4ed09a2bf65c3110c7f'
+  puts "setting up airbrake api"
+end
+
 $stdout.sync = true
 
 configure :development do
