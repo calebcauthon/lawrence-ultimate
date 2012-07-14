@@ -11,12 +11,6 @@ require 'smoke_monster'
 
 enable :sessions
 $stdout.sync = true
-
-puts "havent set the env"
-
-puts "Using environment before: #{settings.environment}"
-set :environment, :production
-puts "just set the env"
 puts "Using environmentafter: #{settings.environment}"
 
 configure :development do
