@@ -6,9 +6,6 @@ require 'curb'
 require 'mongo'
 require 'mail'
 require 'csv'
-require 'airbrake'
-
-use Airbrake::Rack
 
 
 $stdout.sync = true
