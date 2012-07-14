@@ -6,21 +6,20 @@ require 'curb'
 require 'mail'
 require 'csv'
 require 'airbrake'
-require 'smoke_monster'
 require File.join(File.dirname(__FILE__), 'database.rb')
 require File.join(File.dirname(__FILE__), 'extensions.rb')
 require File.join(File.dirname(__FILE__), 'team.rb')
 require File.join(File.dirname(__FILE__), 'lib.rb')
 
-
-enable :sessions
-Airbrake.configure do |config|
-  config.api_key = '665982ab7514b4ed09a2bf65c3110c7f'
-end
+$stdout.sync = true
+enable :show_exceptions, :raise_errors, :sessions
 
 use Airbrake::Rack
 
-$stdout.sync = true
+Airbrake.configure do |config|
+  config.api_key = '665982ab7514b4ed09a2bf65c3110c7f'
+  puts "setting up airbrake api"
+end
 
 configure :development do
   set :db_uri, 'ds033797.mongolab.com'
@@ -177,5 +176,11 @@ get '/players' do
   @players = coll.find({ "$or" => [ {"email-list" => @list_to_search_for}, {"team" => @list_to_search_for} ] })
   
   haml :players, :layout => :bootstrap_template
+end
+
+get '/airbrake_test' do
+  puts "this should throw an airbrake error"
+  dog ={}
+  dog.airbrake_is_neat()
 end
 
