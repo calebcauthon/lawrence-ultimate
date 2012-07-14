@@ -7,14 +7,16 @@ require 'mongo'
 require 'mail'
 require 'csv'
 require 'airbrake'
+
+$stdout.sync = true
+enable :show_exceptions, :raise_errors, :sessions
+
 use Airbrake::Rack
 
 Airbrake.configure do |config|
   config.api_key = '665982ab7514b4ed09a2bf65c3110c7f'
   puts "setting up airbrake api"
 end
-
-$stdout.sync = true
 
 configure :development do
   set :db_uri, 'ds033797.mongolab.com'
@@ -32,17 +34,11 @@ configure :production do
   set :db_pw, 'ccauthon'
 end
 
-
-
-
 def get_db
   db = Mongo::Connection.new(settings.db_uri, settings.db_port).db(settings.db_name)
 	db.authenticate(settings.db_username, settings.db_pw)   
 	db
 end
-
-
-
 
 class String
 
