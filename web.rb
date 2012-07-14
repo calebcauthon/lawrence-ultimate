@@ -7,7 +7,6 @@ require 'mongo'
 require 'mail'
 require 'csv'
 require 'airbrake'
-require 'smoke_monster'
 
 Airbrake.configure do |config|
   config.api_key = '665982ab7514b4ed09a2bf65c3110c7f'
