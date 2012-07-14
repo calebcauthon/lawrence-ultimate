@@ -6,15 +6,8 @@ require 'curb'
 require 'mongo'
 require 'mail'
 require 'csv'
-require 'airbrake'
 
-Airbrake.configure do |config|
-  config.api_key = '665982ab7514b4ed09a2bf65c3110c7f'
-  puts "setting up airbrake api"
-end
-
-use Airbrake::Rack
-
+$stdout.sync = true
 set :raise_errors, true
 set :show_exceptions, true
 
