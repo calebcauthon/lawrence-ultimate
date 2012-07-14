@@ -17,8 +17,6 @@ end
 use Airbrake::Rack
 
 enable :sessions
-$stdout.sync = true
-puts "Using environmentafter: #{settings.environment}"
 
 configure :development do
   set :db_uri, 'ds033797.mongolab.com'
