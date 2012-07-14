@@ -6,11 +6,10 @@ require 'curb'
 require 'mongo'
 require 'mail'
 require 'csv'
-
+require 'airbrake'
+use Airbrake::Rack
 
 $stdout.sync = true
-set :raise_errors, true
-set :show_exceptions, true
 
 configure :development do
   set :db_uri, 'ds033797.mongolab.com'
