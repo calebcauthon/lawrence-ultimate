@@ -10,16 +10,8 @@ require 'airbrake'
 require 'smoke_monster'
 
 enable :sessions
-Airbrake.configure do |config|
-  config.api_key = '665982ab7514b4ed09a2bf65c3110c7f'
-end
-
-use Airbrake::Rack
-
-#$stdout.sync = true
-
+$stdout.sync = true
 set :environment, :production
-
 puts "Using environment: #{settings.environment}"
 
 configure :development do
@@ -38,6 +30,12 @@ configure :production do
   set :db_pw, 'ccauthon'
 end
 
+Airbrake.configure do |config|
+  config.api_key = '665982ab7514b4ed09a2bf65c3110c7f'
+  puts "setting up airbrake api"
+end
+
+use Airbrake::Rack
 
 
 def get_db
