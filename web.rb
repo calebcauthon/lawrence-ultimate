@@ -16,7 +16,7 @@ end
 
 use Airbrake::Rack
 
-$stdout.sync = true
+#$stdout.sync = true
 
 set :environment, :production
 
