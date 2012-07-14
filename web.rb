@@ -401,3 +401,9 @@ get '/players' do
   haml :players, :layout => :bootstrap_template
 end
 
+get '/airbrake_test' do
+  puts "this should throw an airbrake error"
+  dog ={}
+  dog.airbrake_is_neat()
+end
+
