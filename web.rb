@@ -6,6 +6,8 @@ require 'curb'
 require 'mongo'
 require 'mail'
 require 'csv'
+require 'airbrake'
+
 
 $stdout.sync = true
 set :raise_errors, true
