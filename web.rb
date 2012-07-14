@@ -8,6 +8,8 @@ require 'mail'
 require 'csv'
 require 'airbrake'
 
+use Airbrake::Rack
+
 
 $stdout.sync = true
 set :raise_errors, true
