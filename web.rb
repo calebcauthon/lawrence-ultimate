@@ -11,6 +11,8 @@ require 'smoke_monster'
 
 enable :sessions
 $stdout.sync = true
+
+puts "Using environment: #{settings.environment}"
 set :environment, :production
 puts "Using environment: #{settings.environment}"
 
