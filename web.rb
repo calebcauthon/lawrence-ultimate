@@ -14,10 +14,10 @@ $stdout.sync = true
 
 puts "havent set the env"
 
-puts "Using environment: #{settings.environment}"
+puts "Using environment before: #{settings.environment}"
 set :environment, :production
 puts "just set the env"
-puts "Using environment: #{settings.environment}"
+puts "Using environmentafter: #{settings.environment}"
 
 configure :development do
   set :db_uri, 'ds033797.mongolab.com'
