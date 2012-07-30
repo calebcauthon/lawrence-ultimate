@@ -10,6 +10,7 @@ require File.join(File.dirname(__FILE__), 'database.rb')
 require File.join(File.dirname(__FILE__), 'extensions.rb')
 require File.join(File.dirname(__FILE__), 'team.rb')
 require File.join(File.dirname(__FILE__), 'lib.rb')
+require File.join(File.dirname(__FILE__), 'scores.rb')
 
 $stdout.sync = true
 enable :show_exceptions, :raise_errors, :sessions
@@ -35,6 +36,10 @@ configure :production do
   set :db_name, 'heroku_app2357454'
   set :db_username, 'ccauthon'
   set :db_pw, 'ccauthon'
+end
+
+get '/enter_scores' do
+  
 end
 
 get '/' do
