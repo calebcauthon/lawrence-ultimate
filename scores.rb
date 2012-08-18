@@ -9,8 +9,8 @@ module Scores
     unless(winning_team.nil? || winning_team["wins"].nil?)
       winning_team["wins"].push({
         "name" => loser,
-        "PF" => pf,
-        "PA" => pa
+        "PF" => pf.to_i,
+        "PA" => pa.to_i
       })
       coll.save(winning_team)
     end
@@ -20,8 +20,8 @@ module Scores
     unless(losing_team.nil?)
       losing_team["losses"].push({
         "name" => winner,
-        "PF" => pf,
-        "PA" => pa
+        "PF" => pf.to_i,
+        "PA" => pa.to_i
       })
       coll.save(losing_team)
     end    

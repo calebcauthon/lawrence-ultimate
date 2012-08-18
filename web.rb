@@ -19,7 +19,6 @@ use Airbrake::Rack
 
 Airbrake.configure do |config|
   config.api_key = '665982ab7514b4ed09a2bf65c3110c7f'
-  puts "setting up airbrake api"
 end
 
 configure :development do
@@ -38,9 +37,6 @@ configure :production do
   set :db_pw, 'ccauthon'
 end
 
-get '/enter_scores' do
-  
-end
 
 get '/' do
 	haml :index, :layout => :bootstrap_template
@@ -189,3 +185,7 @@ get '/airbrake_test' do
   dog.airbrake_is_neat()
 end
 
+get '/enter_score' do
+  Scores.add_score(params[:winner], params[:loser], params[:winning_score].to_i, params[:losing_score].to_i)
+  haml :scores, :layout => :bootstrap_template
+end

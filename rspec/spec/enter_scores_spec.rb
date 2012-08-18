@@ -1,8 +1,8 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 
 describe "Sinatra App" do
-  it "should respond to /enter_scores" do
-    get '/enter_scores'
+  it "should respond to /enter_score" do
+    get '/enter_score'
     last_response.should be_ok
   end
   
@@ -101,5 +101,18 @@ describe "Scores" do
     team["losses"][2]["PF"].should == 128
     team["losses"][2]["PA"].should == 52
   end
-  
+  it 'should convert scores to integers' do
+    Scores.add_score('TEST_winner', 'TEST_loser', "1128", "52")
+    
+    db = get_db
+    coll = db.collection("teams")
+    team = coll.find_one({"name" => "TEST_loser"})
+    team["losses"][3]["PF"].is_a?(Integer).should == true
+    team["losses"][3]["PA"].is_a?(Integer).should == true
+    
+    team = coll.find_one({"name" => "TEST_winner"})
+    
+    team["wins"][5]["PF"].is_a?(Integer).should == true
+    team["wins"][5]["PA"].is_a?(Integer).should == true
+  end
 end
