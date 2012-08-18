@@ -1,0 +1,16 @@
+%form.scores{"method" => "GET", "action" => "enter_score"}
+  %select{"name" => "winner"}
+    %option TEST
+    %option Red Team
+  %span defeated
+  %select{"name" => "loser"}
+    %option Black Team
+    %option Orange Team
+  %br
+  %span 
+    by a score of
+  %input{"type" => "text", "name" => "winning_score"}
+  %span to
+  %input{"type" => "text", "name" => "losing_score"}
+  %br
+  %input{"type" => "submit", "value" => "Submit Score"}

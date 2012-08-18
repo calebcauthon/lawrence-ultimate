@@ -25,3 +25,5 @@
 .emails .colortable.activetable { display: block; }
 
 .icon-remove:hover { background-color: red; }
+
+.scores input[type=text] { width: 20px; }
