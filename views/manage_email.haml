@@ -3,14 +3,8 @@
   %h1 
     %span#green.colorbutton.active{"data-color" => "green"} Green
     %span#white.colorbutton{"data-color" => "white"} White
-    %span#red.colorbutton{"data-color" => "red"} Red  
-    %span#blue.colorbutton{"data-color" => "blue"} Blue
     %span#black.colorbutton{"data-color" => "black"} Black
     %span#orange.colorbutton{"data-color" => "orange"} Orange 
-    %span#yellow.colorbutton{"data-color" => "yellow"} Yellow
-    %span#pink.colorbutton{"data-color" => "pink"} Pink
-
-    
   
   %table.colortable.white.table.table-bordered.table-striped.table-condensed
     %tr
@@ -22,6 +16,7 @@
         %td #{person["full_name"]}
         %td #{person["email_address"].gsub(/[ABDEHPabdehp]/, "*")}   
           
+
   %table.colortable.green.activetable.table.table-bordered.table-striped.table-condensed
     %tr
       %td name
@@ -31,33 +26,13 @@
       %tr
         %td #{person["full_name"]}
         %td #{person["email_address"].gsub(/[ABDEHPabdehp]/, "*")}    
-  
-  %table.colortable.red.table.table-bordered.table-striped.table-condensed
-    %tr
-      %td name
-      %td email
-      
-    -@red.each do |person|
-      %tr
-        %td #{person["full_name"]}
-        %td #{person["email_address"].gsub(/[ABDEHPabdehp]/, "*")}   
- 
+
   %table.colortable.black.table.table-bordered.table-striped.table-condensed
     %tr
       %td name
       %td email
       
     -@black.each do |person|
-      %tr
-        %td #{person["full_name"]}
-        %td #{person["email_address"].gsub(/[ABDEHPabdehp]/, "*")}   
-  
-  %table.colortable.blue.table.table-bordered.table-striped.table-condensed
-    %tr
-      %td name
-      %td email
-      
-    -@blue.each do |person|
       %tr
         %td #{person["full_name"]}
         %td #{person["email_address"].gsub(/[ABDEHPabdehp]/, "*")}   
@@ -72,26 +47,6 @@
         %td #{person["full_name"]}
         %td #{person["email_address"].gsub(/[ABDEHPabdehp]/, "*")}  
          
-  %table.colortable.yellow.table.table-bordered.table-striped.table-condensed
-    %tr
-      %td name
-      %td email
-      
-    -@yellow.each do |person|
-      %tr
-        %td #{person["full_name"]}
-        %td #{person["email_address"].gsub(/[ABDEHPabdehp]/, "*")}   
-  
-  %table.colortable.pink.table.table-bordered.table-striped.table-condensed
-    %tr
-      %td name
-      %td email
-      
-    -@pink.each do |person|
-      %tr
-        %td #{person["full_name"]}
-        %td #{person["email_address"].gsub(/[ABDEHPabdehp]/, "*")}          
-
 :javascript
   $(document).ready(function() {
     $('.colorbutton').click(function() {

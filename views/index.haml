@@ -1,65 +1,73 @@
 %a(name="summer-league") &nbsp;
 .row-fluid
-	.span12
-		.row-fluid
-			.span10(style="text-align:center;")
-				%h1 2012 Summer League
-		.row-fluid
-			.span6 &nbsp;
-				
-			.span6 &nbsp;
-				
-		.row-fluid
-			.span5.well.scheduleWrap
-				%h3 Schedule
-				%ul
-					%li Tuesday, July 31, 6:30pm: Week #10
-					%li Tuesday, August 7, 6:30pm: Week #11
-					%li 
-						%strong Sunday, August 12, 10:00am: Tournament
-			.span5.emailWrap.offset1.well.emailUpdatesWrap(class="#{@emailClass}")
-				%h3(style="white-space: nowrap;") 
-					Email Updates
-					%span.tinyCaption (we'll try not to annoy you)
-				-unless(@justSignedUp)
-					%a(name="email-sign-up") &nbsp;								
+  .span12
+    .row-fluid
+      .span10(style="text-align:center;")
+        %h1 
+          2012 Fall League
+          %a(href="/2012-fall-league-signup")
+            %img(src="/img/btn-sign_up_now.png")
+    .row-fluid
+      .span6 &nbsp;
+        
+      .span6 &nbsp;
+        
+    .row-fluid
+      .span5.well.scheduleWrap
+        %h3 Fall League Schedule
+        %ul
+          %li.active Thursday, Sept 6, Signups are open
+          %li Thursday, Sept 13, 6:00pm: Signups are closed
+          %li Friday, Sept 14, 8pm, week #1
+          %li Friday, Sept 28, 8pm, week #2
+          %li Friday, Oct 5, 8pm, week #3
+          %li Friday, Oct 12, 8pm, week #4
+          %li Friday, Oct 19, 8pm, Week #5
+          %li Friday, Oct 26, 8pm, Championship night
+          
+      .span5.emailWrap.offset1.well.emailUpdatesWrap(class="#{@emailClass}")
+        %h3(style="white-space: nowrap;") 
+          Email Updates
+          %span.tinyCaption (we'll try not to annoy you)
+        -unless(@justSignedUp)
+          %a(name="email-sign-up") &nbsp;               
 
-					%form(action="http://lawrenceultimate.us4.list-manage.com/subscribe/post?u=9f62837be6c5a1f7ec773f8c4&id=47b71733a5" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank")
-						%input.pristine(type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required)
-						%div
-							%button(type="submit" class="btn btn-primary" id="lusl-signup-button") sign me up!							
-				-else
-					%div Thanks for signing up! 					
-					-if(@emailSent)
-						%br
-						%div We sent a verification email to #{@emailAddress}
-						%div 
-							%a(href="/email-preferences") Update your email preferences
-					-elsif(@alreadyVerified)
-						%br
-						%div This email is already on the list and verified. You must really like email.
-					-elsif(@hasEmailConfirmationWaiting)
-						%br
-						%div We sent a verification email to #{@emailAddress}
-			.span5.locationWrap.offset1.well
-				%h3 Location
-				%div
-					%a(href="http://g.co/maps/hrt2x") 
-						%div
-							YSI Sports Complex
-							%br
-							4911 West 27th Street, Lawrence, KS 66047
-							
-							
-			
-			
+          %form(action="http://lawrenceultimate.us4.list-manage.com/subscribe/post?u=9f62837be6c5a1f7ec773f8c4&id=47b71733a5" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank")
+            %input.pristine(type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required)
+            %div
+              %button(type="submit" class="btn btn-primary" id="lusl-signup-button") sign me up!              
+        -else
+          %div Thanks for signing up!           
+          -if(@emailSent)
+            %br
+            %div We sent a verification email to #{@emailAddress}
+            %div 
+              %a(href="/email-preferences") Update your email preferences
+          -elsif(@alreadyVerified)
+            %br
+            %div This email is already on the list and verified. You must really like email.
+          -elsif(@hasEmailConfirmationWaiting)
+            %br
+            %div We sent a verification email to #{@emailAddress}
+      .span5.locationWrap.offset1.well
+        %h3 Location
+        %div
+          %a(href="http://g.co/maps/hrt2x") 
+            %div
+              YSI Sports Complex
+              %br
+              4911 West 27th Street, Lawrence, KS 66047
+              
+              
+      
+      
 :javascript
-	jQuery(document).ready(function() {
-		$('.highlight').unbind('mouseover').bind('mouseover', function() {
-			var classToHighlight = $(this).attr('h');
-			$('.'+classToHighlight).addClass('highlight')
-		}).unbind('mouseout').bind('mouseout', function() {
-			var classToHighlight = $(this).attr('h');
-			$('.'+classToHighlight).removeClass('highlight')
-		});		
-	});
+  jQuery(document).ready(function() {
+    $('.highlight').unbind('mouseover').bind('mouseover', function() {
+      var classToHighlight = $(this).attr('h');
+      $('.'+classToHighlight).addClass('highlight')
+    }).unbind('mouseout').bind('mouseout', function() {
+      var classToHighlight = $(this).attr('h');
+      $('.'+classToHighlight).removeClass('highlight')
+    });   
+  });

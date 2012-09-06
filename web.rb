@@ -97,6 +97,10 @@ get '/summer-league-signup' do
 	haml :signup, :layout => :bootstrap_template
 end
 
+get '/fall-league-signup' do
+	haml :fall_league_signup, :layout => :bootstrap_template
+end
+
 get '/assets/js/:jsFile' do
 	File.read("assets/js/#{params['jsFile']}")
 end

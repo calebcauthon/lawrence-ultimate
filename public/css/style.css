@@ -27,3 +27,5 @@
 .icon-remove:hover { background-color: red; }
 
 .scores input[type=text] { width: 20px; }
+
+.scheduleWrap { box-shadow: 3px 3px 6px 1px; }
