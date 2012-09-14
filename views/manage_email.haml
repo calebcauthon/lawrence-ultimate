@@ -3,7 +3,7 @@
   %h1 
     %span#green.colorbutton.active{"data-color" => "green"} Green
     %span#white.colorbutton{"data-color" => "white"} White
-    %span#black.colorbutton{"data-color" => "black"} Black
+    %span#blue.colorbutton{"data-color" => "blue"} Blue
     %span#red.colorbutton{"data-color" => "red"} Red 
   
   %table.colortable.white.table.table-bordered.table-striped.table-condensed
@@ -27,12 +27,12 @@
         %td #{person["full_name"]}
         %td #{person["email_address"].gsub(/[ABDEHPabdehp]/, "*")}    
 
-  %table.colortable.black.table.table-bordered.table-striped.table-condensed
+  %table.colortable.blue.table.table-bordered.table-striped.table-condensed
     %tr
       %td name
       %td email
       
-    -@black.each do |person|
+    -@blue.each do |person|
       %tr
         %td #{person["full_name"]}
         %td #{person["email_address"].gsub(/[ABDEHPabdehp]/, "*")}   
