@@ -1,0 +1,40 @@
+%h1 #{@error}
+%table.table.table-condensed.table-striped
+  %tr.success
+    %td 
+    %td winner
+    %td loser
+    %td score
+  %tr
+    %form{"action" => "#", "method" => "POST"}
+      %td
+        %input.btn{"type" => "submit", "value" => "add"}
+      %td 
+        %input{"name" => "winner"}
+      %td
+        %input{"name" => "loser"}
+      %td 
+        %input{"style" => "width: 50px;", "name" => "winning_score"}
+        %span -
+        %input{"style" => "width: 50px;", "name" => "losing_score"}
+  -@scores.each do |this_score|
+    %tr
+      %td
+        %input{"value" => "delete", "type" => "submit", "team_id" => "#{this_score['winning_team_object']['_id']}", "score_id" => "#{this_score['losing_name']}-#{this_score['winning_points']}-#{this_score['losing_points']}"}
+      %td #{this_score['winning_name']}
+      %td #{this_score['losing_name']}
+      %td #{this_score['winning_points']} - #{this_score['losing_points']}    
+:javascript
+  jQuery(document).ready(function() {
+    $ = jQuery;
+    $('input[type=submit]').click(function() {
+      var team_id = $(this).attr('team_id');
+      var score_id = $(this).attr('score_id');
+      var this_row = $(this).parent().parent();
+      
+      $.get('/delete_score/'+team_id+'/'+score_id, {}, function(output) {
+        $(this_row).remove();
+      });
+    });
+    
+  });

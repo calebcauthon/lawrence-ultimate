@@ -107,7 +107,7 @@ end
 
 get %r{([^\.]+)\.asdfcss} do
 	File.read("assets/css/#{params[:captures].first}.css")
-end
+end 
 
 get '/about' do
 	haml :about, :layout => :layout
@@ -121,6 +121,79 @@ get '/js/:file' do
 	File.read("js/#{params['file']}")
 end
 
+get '/games' do
+  @error = ""
+  @scores = Scores.get_all_scores
+  haml :games, :layout => :bootstrap_template
+end
+
+post '/games' do
+  winner = params['winner']
+  loser = params['loser']
+  winning_score = params['winning_score'].to_i
+  losing_score = params['losing_score'].to_i
+
+  db = get_db
+  coll = db.collection("teams")
+
+  winning_team = coll.find_one("name" => winner)
+  losing_team = coll.find_one("name" => loser)
+  
+  @error = ""
+  if(winning_team.nil?)
+    @error = "#{winner} not found"
+    @scores = Scores.get_all_scores
+    return haml :games, :layout => :bootstrap_template
+  end
+  
+  if(losing_team.nil?)
+    @error = "#{loser} not found"
+    @scores = Scores.get_all_scores
+    return haml :games, :layout => :bootstrap_template
+  end
+  
+  win = { "name" => loser, "PF" => winning_score, "PA" => losing_score }
+  if(winning_team['wins'].nil?)
+    winning_team['wins'] = Array.new
+  end
+  winning_team['wins'].push(win)
+  coll.save(winning_team)
+  
+  loss = { "name" => winner, "PF" => losing_score, "PA" => winning_score }
+  if(losing_team['losses'].nil?)
+    losing_team['losses'] = Array.new
+  end
+  losing_team['losses'].push(loss)
+  coll.save(losing_team)
+  
+  @scores = Scores.get_all_scores
+  haml :games, :layout => :bootstrap_template
+end
+
+
+get '/delete_score/:team_id/:score_id' do
+  puts "tem 1aaa"
+  score_id = params['score_id']
+  team_id = params['team_id']
+  
+  result = "didnt find it"
+  
+  db = get_db
+	coll = db.collection('teams')
+	
+	this_team = coll.find_one('_id' => BSON::ObjectId(team_id))
+	wins = this_team['wins']
+  
+  new_wins = Array.new
+  wins.each do |this_win|
+    this_win_id = "#{this_win['name']}-#{this_win['PF']}-#{this_win['PA']}"
+    if this_win_id != score_id
+      new_wins.push(this_win)
+    end
+  end
+  this_team['wins'] = new_wins
+  coll.save(this_team)
+end
 
 
 
