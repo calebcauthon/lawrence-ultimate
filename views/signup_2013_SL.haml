@@ -1,0 +1,74 @@
+
+%div
+  %select(name='q')
+  %button.load Load
+
+%div
+  %label Name
+  %input(name='name')
+  
+  %label Email
+  %input(name='email')
+  
+  %label Height
+  %input(name='height')
+  
+  %label Weight
+  %input(name='weight')
+  
+  %label Highest Level of Experience
+  %input(name='experience')
+  
+  %label Partner - you may sign up with 1 player, if they also wish to sign up with you
+  %input(name='partner')
+  
+  %button.submit Submit Registration
+  
+%script{:type => "text/javascript"}
+  :plain
+    $(document).ready(function() {
+      var registration_list = new Firebase('https://lusl-dev.firebaseIO.com/summer_league_2013/registrations');
+      var this_registration = registration_list.push();
+      
+      var populate_the_name_dropdown = function() {
+        registration_list.on('child_added', function(child) {
+          var reg = child.val();
+          $('select[name=q]').append('<option>'+reg.name+'</option>');
+        });
+      }  
+      
+      populate_the_name_dropdown();
+          
+        
+      $('button.submit').click(function() {
+        this_registration.set({ 
+          name: $('input[name=name]').val(),
+          email: $('input[name=email]').val(),
+          height: $('input[name=height]').val(),
+          weight: $('input[name=weight]').val(),
+          experience: $('input[name=experience]').val(),
+          partner: $('input[name=partner]').val()
+        });
+      });
+      
+      $('select[name=q]').change(function() {
+        var q = $('select[name=q]').val();
+        
+        registration_list.on('child_added', function(reg) {
+          var name = reg.name();
+          var data = reg.val();
+          if(data.name == q) {
+            $('input[name=name]').val(data.name);
+            $('input[name=email]').val(data.email);
+            $('input[name=height]').val(data.height);
+            $('input[name=weight]').val(data.weight);
+            $('input[name=experience]').val(data.experience);
+            $('input[name=partner]').val(data.partner);
+            
+            this_registration = new Firebase('https://lusl-dev.firebaseIO.com/summer_league_2013/registrations/'+name);
+          }
+          
+        });
+        
+      });
+    });

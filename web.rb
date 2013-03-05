@@ -94,7 +94,31 @@ get '/teams' do
 end
 
 get '/summer-league-signup' do
-	haml :signup, :layout => :bootstrap_template
+	haml :signup_2013_SL, :layout => :bootstrap_template
+end
+
+def save_2013_signup(player)
+end
+
+post '/summer-league-signup' do
+  name = 'yourname'
+  email = 'youremail'
+  height = 'yourheight'
+  weight = 'yourweight'
+  experience = 'yourexperience'
+  partner = 'yourpartner'
+  
+  @player = {}
+  @player['name'] = name
+  @player['email'] = email
+  @player['height'] = height
+  @player['weight'] = weight
+  @player['experience'] = experience
+  @player['partner'] = partner
+  
+  save_2013_signup(@player)
+  
+  haml :signup_2013_SL_thanks, :layout => :bootstrap_template
 end
 
 get '/fall-league-signup' do
