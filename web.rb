@@ -9,7 +9,6 @@ require './mailgun.rb'
 
 enable :sessions
 
-
 post '/email-preferences' do
 	keep_on_list = params['keep_on_list'] == "yes"
 	puts params
@@ -125,8 +124,7 @@ def createDbEntryShowingThatAVerificationEmailHasBeenSent(doc)
 end
 
 def get_the_db_entry_for_this_email_id(id)
-	coll = email_list
-	coll.find({'_id' => BSON::ObjectId(id.to_s)}).next
+	email_list.find({'_id' => BSON::ObjectId(id.to_s)}).next
 end
 
 
