@@ -141,7 +141,7 @@ def get_or_create_the_db_entry_for_this_email_address(email)
   email_list.find_one({:_id => BSON::ObjectId(document_id.to_s)})
 end
 
-def aVerificationEmailNeedsToBeSent(doc)
+def a_verification_email_needs_to_be_sent(doc)
 	if(!thisEmailAddressHasBeenVerified(doc) && !aVerificationEmailHasBeenSentToThisEmailAddress(doc))
 		return true
 	else
@@ -153,7 +153,7 @@ def addToListOfUnverifiedSummerLeagueEmails(email)
 	@emailAddress = email
 	
 	doc = get_or_create_the_db_entry_for_this_email_address(email)
-	if(aVerificationEmailNeedsToBeSent(doc))
+	if(a_verification_email_needs_to_be_sent(doc))
 		sendVerificationEmail(email)
 		createDbEntryShowingThatAVerificationEmailHasBeenSent(doc)					
 		
