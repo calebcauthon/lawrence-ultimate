@@ -18,8 +18,7 @@ post '/email-preferences' do
 	doc = get_the_db_entry_for_this_email_id @email_id
 	
 	doc['opted_out'] = !keep_on_list;
-	coll = get_email_list_collection	
-	coll.save(doc);
+	email_list_collection.save doc
 	
 	get_email_preferences
 end
@@ -49,7 +48,7 @@ post '/' do
 	get_index
 end
 
-def get_email_list_collection
+def email_list_collection
 	grab_collection('email_list')
 end
 
