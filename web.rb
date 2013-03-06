@@ -93,8 +93,7 @@ end
 def email_list
 	db = Mongo::Connection.new('staff.mongohq.com', 10025).db('app2382060')
 	db.authenticate('heroku', 'heroku')	
-	coll = db.collection(collectionName)
-	coll
+	db.collection('email_list')
 end
 
 def aVerificationEmailHasBeenSentToThisEmailAddress(doc)
