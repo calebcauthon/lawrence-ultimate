@@ -18,7 +18,7 @@ post '/email-preferences' do
 	doc = get_the_db_entry_for_this_email_id @email_id
 	
 	doc['opted_out'] = !keep_on_list;
-	email_list_collection.save doc
+	email_list.save doc
 	
 	get_email_preferences
 end
@@ -48,12 +48,8 @@ post '/' do
 	get_index
 end
 
-def email_list_collection
-	grab_collection('email_list')
-end
-
 def getEmailStatusFromEmailId(emailID)
-	coll = get_email_list_collection
+	coll = email_list
 	begin 
 		result = coll.find(:id => BSON::ObjectId(emailID)).next
 		if(result['verified'] == true)
@@ -94,14 +90,12 @@ get '/about' do
 end
 
 
-def grab_collection(collectionName)
+def email_list
 	db = Mongo::Connection.new('staff.mongohq.com', 10025).db('app2382060')
 	db.authenticate('heroku', 'heroku')	
 	coll = db.collection(collectionName)
 	coll
 end
-
-
 
 def aVerificationEmailHasBeenSentToThisEmailAddress(doc)
 	if(!doc['emails'])
@@ -125,7 +119,7 @@ def thisEmailAddressHasBeenVerified(doc)
 end
 
 def createDbEntryShowingThatAVerificationEmailHasBeenSent(doc) 
-	coll = grab_collection('email_list')
+	coll = email_list
 	
 	if(!doc['emails'])
 		doc['emails'] = Array.new
@@ -136,13 +130,13 @@ def createDbEntryShowingThatAVerificationEmailHasBeenSent(doc)
 end
 
 def get_the_db_entry_for_this_email_id(id)
-	coll = grab_collection('email_list')
+	coll = email_list
 	coll.find({'_id' => BSON::ObjectId(id.to_s)}).next
 end
 
 
 def getOrCreateTheDbEntryForThisEmailAddress(email)
-	coll = grab_collection('email_list')
+	coll = email_list
 	result = coll.find({'email_address' => email})
 	
 	if(result.count == 0)
@@ -207,14 +201,14 @@ Lawrence Ultimate eTeam"
 end
 
 def get_the_object_id(email_address, collectionName)
-	coll = grab_collection(collectionName)
+	coll = email_list(collectionName)
 	doc = coll.find({'email_address' => email_address}).next
 	object_id = doc['_id'].to_s
 	object_id
 end
 
 def markEmailAsVerified(doc_id)
-	coll = grab_collection('email_list')
+	coll = email_list('email_list')
 	doc = coll.find({'_id' => BSON::ObjectId(doc_id)}).next
 	doc['verified'] = true
 	coll.save(doc)
