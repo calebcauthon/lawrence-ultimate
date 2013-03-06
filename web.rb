@@ -129,18 +129,16 @@ end
 
 def get_or_create_the_db_entry_for_this_email_address(email)
 def get_or_create_the_db_entry_for_this_email_address(email)
-	result = email_list.find({'email_address' => email})
+	result = email_list.find({'email_address' => email}).first
+
+  return result unless result.nil?
 	
-	if(result.count == 0)
-		document_id = email_list.insert({
-                                      'email_address' => email,
-                                      'timestamp' => getTimestamp,
-                                      'verified' => false
-                                    })
-		email_list.find_one({:_id => BSON::ObjectId(document_id.to_s)})
-	else
-		result.first		
-	end
+  document_id = email_list.insert({
+                                    'email_address' => email,
+                                    'timestamp' => getTimestamp,
+                                    'verified' => false
+                                  })
+  email_list.find_one({:_id => BSON::ObjectId(document_id.to_s)})
 end
 
 def aVerificationEmailNeedsToBeSent(doc)
