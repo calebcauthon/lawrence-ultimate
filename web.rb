@@ -169,16 +169,16 @@ end
 
 def add_to_list_of_unverified_summer_league_emails(email)
 	doc = get_or_create_the_db_entry_for_this_email_address(email)
-	if(a_verification_email_needs_to_be_sent(doc))
-		sendVerificationEmail(email)
-		createDbEntryShowingThatAVerificationEmailHasBeenSent(doc)					
+	if a_verification_email_needs_to_be_sent doc
+		sendVerificationEmail email
+		createDbEntryShowingThatAVerificationEmailHasBeenSent doc
 		
 		@accountWebkey = doc['_id'].to_s
 		@emailSent = true
 		@hasEmailConfirmationWaiting = true
 		session[:logged_in] = true
 		session[:email_id] = doc['_id']
-	elsif(thisEmailAddressHasBeenVerified(doc))
+	elsif thisEmailAddressHasBeenVerified doc
 		@alreadyVerified = true
 	else
 		@hasEmailConfirmationWaiting = true
