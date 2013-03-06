@@ -10,13 +10,13 @@ require './mailgun.rb'
 enable :sessions
 
 get '/' do
-	get_index
+	haml :index, :layout => :bootstrap_template
 end
 
 post '/' do
 	addToListOfUnverifiedSummerLeagueEmails(params['email_address'])
 	@justSignedUp = true
-	get_index
+	haml :index, :layout => :bootstrap_template
 end
 
 get '/about' do
@@ -102,10 +102,6 @@ def getEmailStatusFromEmailId(emailID)
 	if(result.count > 0)
 		return :unverified
 	end	
-end
-
-def get_index
-	haml :index, :layout => :bootstrap_template
 end
 
 def email_list
