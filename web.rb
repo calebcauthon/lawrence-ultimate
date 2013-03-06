@@ -9,6 +9,45 @@ require './mailgun.rb'
 
 enable :sessions
 
+get '/' do
+	get_index
+end
+
+post '/' do
+	addToListOfUnverifiedSummerLeagueEmails(params['email_address'])
+	@justSignedUp = true
+	get_index
+end
+
+get '/about' do
+	haml :about, :layout => :layout
+end
+
+get '/style.css' do
+	sass :style
+end
+
+get '/assets/js/:jsFile' do
+	File.read("assets/js/#{params['jsFile']}")
+end
+
+get %r{([^\.]+)\.asdfcss} do
+	File.read("assets/css/#{params[:captures].first}.css")
+end
+
+get '/js/:file' do
+	File.read("js/#{params['file']}")
+end
+
+get '/verify/:email_id' do
+	markEmailAsVerified(params['email_id'])
+		
+	session[:logged_in] = true
+	session[:email_id] = params['email_id']
+
+	haml :verify, :layout => :bootstrap_template
+end
+
 post '/email-preferences' do
 	keep_on_list = params['keep_on_list'] == "yes"
 	puts params
@@ -47,12 +86,6 @@ def show_the_email_preferences
 	haml :email_preferences, :layout => :bootstrap_template
 end
 
-post '/' do
-	addToListOfUnverifiedSummerLeagueEmails(params['email_address'])
-	@justSignedUp = true
-	get_index
-end
-
 def getEmailStatusFromEmailId(emailID)
 	coll = email_list
 	begin 
@@ -69,29 +102,11 @@ def getEmailStatusFromEmailId(emailID)
 	if(result.count > 0)
 		return :unverified
 	end	
-
-end
-
-get '/' do
-	get_index
 end
 
 def get_index
 	haml :index, :layout => :bootstrap_template
 end
-
-get '/assets/js/:jsFile' do
-	File.read("assets/js/#{params['jsFile']}")
-end
-
-get %r{([^\.]+)\.asdfcss} do
-	File.read("assets/css/#{params[:captures].first}.css")
-end
-
-get '/about' do
-	haml :about, :layout => :layout
-end
-
 
 def email_list
 	db = Mongo::Connection.new('staff.mongohq.com', 10025).db('app2382060')
@@ -211,25 +226,6 @@ def markEmailAsVerified(doc_id)
 	coll.save(doc)
 end
 
-
-
-get '/verify/:email_id' do
-	markEmailAsVerified(params['email_id'])
-		
-	session[:logged_in] = true
-	session[:email_id] = params['email_id']
-
-	haml :verify, :layout => :bootstrap_template
-end
-
 def getTimestamp
 	DateTime.now.to_s
-end
-
-get '/style.css' do
-	sass :style
-end
-
-get '/js/:file' do
-	File.read("js/#{params['file']}")
 end
