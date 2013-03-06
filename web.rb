@@ -11,18 +11,14 @@ enable :sessions
 
 
 post '/email-preferences' do
-	if(params['keep_on_list'].eql? "yes")
-		keep_on_list = true
-	else
-		keep_on_list = false
-	end
+	keep_on_list = params['keep_on_list'] == "yes"
 	puts params
 	
 	@email_id = session[:email_id]
-	doc = getTheDbEntryForThisEmailId(@email_id)
+	doc = get_the_db_entry_for_this_email_id @email_id
 	
 	doc['opted_out'] = !keep_on_list;
-	coll = getEmailListCollection	
+	coll = get_email_list_collection	
 	coll.save(doc);
 	
 	get_email_preferences
@@ -35,7 +31,7 @@ end
 def get_email_preferences
 	@logged_in = session[:logged_in]
 	@email_id = session[:email_id]
-	doc = getTheDbEntryForThisEmailId(@email_id)
+	doc = get_the_db_entry_for_this_email_id(@email_id)
 	@email_address = doc['email_address']
 	
 	if(doc['opted_out'])
@@ -53,12 +49,12 @@ post '/' do
 	get_index
 end
 
-def getEmailListCollection
-	grabCollection('email_list')
+def get_email_list_collection
+	grab_collection('email_list')
 end
 
 def getEmailStatusFromEmailId(emailID)
-	coll = getEmailListCollection
+	coll = get_email_list_collection
 	begin 
 		result = coll.find(:id => BSON::ObjectId(emailID)).next
 		if(result['verified'] == true)
@@ -99,7 +95,7 @@ get '/about' do
 end
 
 
-def grabCollection(collectionName)
+def grab_collection(collectionName)
 	db = Mongo::Connection.new('staff.mongohq.com', 10025).db('app2382060')
 	db.authenticate('heroku', 'heroku')	
 	coll = db.collection(collectionName)
@@ -130,7 +126,7 @@ def thisEmailAddressHasBeenVerified(doc)
 end
 
 def createDbEntryShowingThatAVerificationEmailHasBeenSent(doc) 
-	coll = grabCollection('email_list')
+	coll = grab_collection('email_list')
 	
 	if(!doc['emails'])
 		doc['emails'] = Array.new
@@ -140,15 +136,15 @@ def createDbEntryShowingThatAVerificationEmailHasBeenSent(doc)
 	coll.update({'_id' => doc['_id']}, doc)	
 end
 
-def getTheDbEntryForThisEmailId(id)
-	coll = grabCollection('email_list')
+def get_the_db_entry_for_this_email_id(id)
+	coll = grab_collection('email_list')
 	doc = coll.find({'_id' => BSON::ObjectId(id.to_s)}).next
 	return doc
 end
 
 
 def getOrCreateTheDbEntryForThisEmailAddress(email)
-	coll = grabCollection('email_list')
+	coll = grab_collection('email_list')
 	result = coll.find({'email_address' => email})
 	
 	if(result.count == 0)
@@ -213,14 +209,14 @@ Lawrence Ultimate eTeam"
 end
 
 def get_the_object_id(email_address, collectionName)
-	coll = grabCollection(collectionName)
+	coll = grab_collection(collectionName)
 	doc = coll.find({'email_address' => email_address}).next
 	object_id = doc['_id'].to_s
 	object_id
 end
 
 def markEmailAsVerified(doc_id)
-	coll = grabCollection('email_list')
+	coll = grab_collection('email_list')
 	doc = coll.find({'_id' => BSON::ObjectId(doc_id)}).next
 	doc['verified'] = true
 	coll.save(doc)
