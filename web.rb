@@ -189,7 +189,7 @@ def sendVerificationEmail(email_address)
 	api_url = 'https://api.mailgun.net/v2'
 	api_key = 'key-31qllrfmv51h67b1nwoln0wjrd5qsuf9'
 
-	id = get_the_object_id(email_address, 'email_list')
+	id = get_the_object_id email_address, 'email_list'
 
 	recipient = 'calebcauthon@gmail.com' #email_address
 	sender = "'Lawrence Ultimate eTeam' <caleb@lawrenceultimate.com>"
