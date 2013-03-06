@@ -83,8 +83,6 @@ get %r{([^\.]+)\.asdfcss} do
 	File.read("assets/css/#{params[:captures].first}.css")
 end
 
-
-
 get '/about' do
 	haml :about, :layout => :layout
 end
@@ -97,9 +95,7 @@ def email_list
 end
 
 def aVerificationEmailHasBeenSentToThisEmailAddress(doc)
-	if(!doc['emails'])
-		return false
-	end
+	return false unless !doc['emails']
 	
 	doc['emails'].each do |thisDoc| 
 		if(thisDoc['type'].eql? "verification")
