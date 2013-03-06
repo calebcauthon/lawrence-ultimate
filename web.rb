@@ -15,7 +15,7 @@ end
 
 post '/' do
   @emailAddress = params['email_address']
-	add_to_list_of_unverified_summer_league_emails @emailAddress
+	add_email_signup @emailAddress
 	@justSignedUp = true
 	haml :index, :layout => :bootstrap_template
 end
@@ -141,7 +141,6 @@ def get_the_db_entry_for_this_email_id(id)
 end
 
 def get_or_create_the_db_entry_for_this_email_address(email)
-def get_or_create_the_db_entry_for_this_email_address(email)
 	result = email_list.find({'email_address' => email}).first
 
   return result unless result.nil?
@@ -162,7 +161,7 @@ def a_verification_email_needs_to_be_sent(doc)
 	end
 end
 
-def add_to_list_of_unverified_summer_league_emails(email)
+def add_email_signup(email)
 	doc = get_or_create_the_db_entry_for_this_email_address(email)
 	if a_verification_email_needs_to_be_sent doc
 		send_verification_email email
