@@ -137,8 +137,7 @@ end
 
 def get_the_db_entry_for_this_email_id(id)
 	coll = grab_collection('email_list')
-	doc = coll.find({'_id' => BSON::ObjectId(id.to_s)}).next
-	return doc
+	coll.find({'_id' => BSON::ObjectId(id.to_s)}).next
 end
 
 
