@@ -131,14 +131,9 @@ def thisEmailAddressHasBeenVerified(doc)
 end
 
 def createDbEntryShowingThatAVerificationEmailHasBeenSent(doc) 
-	coll = email_list
-	
-	if(!doc['emails'])
-		doc['emails'] = Array.new
-	end
-	
+  doc['emails'] ||= []
 	doc['emails'].push({"type" => "verification", 'timestamp' => getTimestamp})
-	coll.update({'_id' => doc['_id']}, doc)	
+	email_list.update({'_id' => doc['_id']}, doc)	
 end
 
 def get_the_db_entry_for_this_email_id(id)
@@ -208,17 +203,15 @@ Lawrence Ultimate eTeam"
 end
 
 def get_the_object_id(email_address, collectionName)
-	coll = email_list(collectionName)
-	doc = coll.find({'email_address' => email_address}).next
+	doc = email_list.find({'email_address' => email_address}).next
 	object_id = doc['_id'].to_s
 	object_id
 end
 
 def markEmailAsVerified(doc_id)
-	coll = email_list('email_list')
-	doc = coll.find({'_id' => BSON::ObjectId(doc_id)}).next
+	doc = email_list.find({'_id' => BSON::ObjectId(doc_id)}).next
 	doc['verified'] = true
-	coll.save(doc)
+	email_list.save doc
 end
 
 def getTimestamp
