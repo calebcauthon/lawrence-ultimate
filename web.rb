@@ -14,7 +14,8 @@ get '/' do
 end
 
 post '/' do
-	add_to_list_of_unverified_summer_league_emails params['email_address']
+  @emailAddress = params['email_address']
+	add_to_list_of_unverified_summer_league_emails @emailAddress
 	@justSignedUp = true
 	haml :index, :layout => :bootstrap_template
 end
@@ -167,8 +168,6 @@ def a_verification_email_needs_to_be_sent(doc)
 end
 
 def add_to_list_of_unverified_summer_league_emails(email)
-	@emailAddress = email
-	
 	doc = get_or_create_the_db_entry_for_this_email_address(email)
 	if(a_verification_email_needs_to_be_sent(doc))
 		sendVerificationEmail(email)
