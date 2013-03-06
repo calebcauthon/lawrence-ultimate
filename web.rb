@@ -19,14 +19,16 @@ post '/email-preferences' do
 	doc['opted_out'] = !keep_on_list;
 	email_list.save doc
 	
-	get_email_preferences
+	load_email_preferences
+  show_the_email_preferences
 end
 
 get '/email-preferences' do
-	get_email_preferences
+	load_email_preferences
+  show_the_email_preferences
 end
 
-def get_email_preferences
+def load_email_preferences
 	@logged_in = session[:logged_in]
 	@email_id = session[:email_id]
 	doc = get_the_db_entry_for_this_email_id(@email_id)
@@ -37,7 +39,11 @@ def get_email_preferences
 	else
 		@has_opted_out = false
 	end
-	
+
+	show_the_email_preferences
+end
+
+def show_the_email_preferences
 	haml :email_preferences, :layout => :bootstrap_template
 end
 
