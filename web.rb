@@ -170,7 +170,7 @@ end
 def add_to_list_of_unverified_summer_league_emails(email)
 	doc = get_or_create_the_db_entry_for_this_email_address(email)
 	if a_verification_email_needs_to_be_sent doc
-		sendVerificationEmail email
+		send_verification_email email
 		createDbEntryShowingThatAVerificationEmailHasBeenSent doc
 		
 		@accountWebkey = doc['_id'].to_s
@@ -186,7 +186,7 @@ def add_to_list_of_unverified_summer_league_emails(email)
 end
 
 
-def sendVerificationEmail(email_address)
+def send_verification_email(email_address)
 	api_url = 'https://api.mailgun.net/v2'
 	api_key = 'key-31qllrfmv51h67b1nwoln0wjrd5qsuf9'
 
